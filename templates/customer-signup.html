@@ -313,8 +313,57 @@
                         <label for="state">State</label>
                         <select id="state" name="state" required>
                             <option value="">Select State</option>
+                            <option value="AL" {% if session.get('state') == 'AL' %}selected{% endif %}>Alabama</option>
+                            <option value="AK" {% if session.get('state') == 'AK' %}selected{% endif %}>Alaska</option>
+                            <option value="AZ" {% if session.get('state') == 'AZ' %}selected{% endif %}>Arizona</option>
+                            <option value="AR" {% if session.get('state') == 'AR' %}selected{% endif %}>Arkansas</option>
                             <option value="CA" {% if session.get('state') == 'CA' %}selected{% endif %}>California</option>
+                            <option value="CO" {% if session.get('state') == 'CO' %}selected{% endif %}>Colorado</option>
+                            <option value="CT" {% if session.get('state') == 'CT' %}selected{% endif %}>Connecticut</option>
+                            <option value="DE" {% if session.get('state') == 'DE' %}selected{% endif %}>Delaware</option>
+                            <option value="DC" {% if session.get('state') == 'DC' %}selected{% endif %}>District of Columbia</option>
+                            <option value="FL" {% if session.get('state') == 'FL' %}selected{% endif %}>Florida</option>
+                            <option value="GA" {% if session.get('state') == 'GA' %}selected{% endif %}>Georgia</option>
+                            <option value="HI" {% if session.get('state') == 'HI' %}selected{% endif %}>Hawaii</option>
+                            <option value="ID" {% if session.get('state') == 'ID' %}selected{% endif %}>Idaho</option>
+                            <option value="IL" {% if session.get('state') == 'IL' %}selected{% endif %}>Illinois</option>
+                            <option value="IN" {% if session.get('state') == 'IN' %}selected{% endif %}>Indiana</option>
+                            <option value="IA" {% if session.get('state') == 'IA' %}selected{% endif %}>Iowa</option>
+                            <option value="KS" {% if session.get('state') == 'KS' %}selected{% endif %}>Kansas</option>
+                            <option value="KY" {% if session.get('state') == 'KY' %}selected{% endif %}>Kentucky</option>
+                            <option value="LA" {% if session.get('state') == 'LA' %}selected{% endif %}>Louisiana</option>
+                            <option value="ME" {% if session.get('state') == 'ME' %}selected{% endif %}>Maine</option>
+                            <option value="MD" {% if session.get('state') == 'MD' %}selected{% endif %}>Maryland</option>
+                            <option value="MA" {% if session.get('state') == 'MA' %}selected{% endif %}>Massachusetts</option>
+                            <option value="MI" {% if session.get('state') == 'MI' %}selected{% endif %}>Michigan</option>
+                            <option value="MN" {% if session.get('state') == 'MN' %}selected{% endif %}>Minnesota</option>
+                            <option value="MS" {% if session.get('state') == 'MS' %}selected{% endif %}>Mississippi</option>
+                            <option value="MO" {% if session.get('state') == 'MO' %}selected{% endif %}>Missouri</option>
+                            <option value="MT" {% if session.get('state') == 'MT' %}selected{% endif %}>Montana</option>
+                            <option value="NE" {% if session.get('state') == 'NE' %}selected{% endif %}>Nebraska</option>
+                            <option value="NV" {% if session.get('state') == 'NV' %}selected{% endif %}>Nevada</option>
+                            <option value="NH" {% if session.get('state') == 'NH' %}selected{% endif %}>New Hampshire</option>
+                            <option value="NJ" {% if session.get('state') == 'NJ' %}selected{% endif %}>New Jersey</option>
+                            <option value="NM" {% if session.get('state') == 'NM' %}selected{% endif %}>New Mexico</option>
                             <option value="NY" {% if session.get('state') == 'NY' %}selected{% endif %}>New York</option>
+                            <option value="NC" {% if session.get('state') == 'NC' %}selected{% endif %}>North Carolina</option>
+                            <option value="ND" {% if session.get('state') == 'ND' %}selected{% endif %}>North Dakota</option>
+                            <option value="OH" {% if session.get('state') == 'OH' %}selected{% endif %}>Ohio</option>
+                            <option value="OK" {% if session.get('state') == 'OK' %}selected{% endif %}>Oklahoma</option>
+                            <option value="OR" {% if session.get('state') == 'OR' %}selected{% endif %}>Oregon</option>
+                            <option value="PA" {% if session.get('state') == 'PA' %}selected{% endif %}>Pennsylvania</option>
+                            <option value="RI" {% if session.get('state') == 'RI' %}selected{% endif %}>Rhode Island</option>
+                            <option value="SC" {% if session.get('state') == 'SC' %}selected{% endif %}>South Carolina</option>
+                            <option value="SD" {% if session.get('state') == 'SD' %}selected{% endif %}>South Dakota</option>
+                            <option value="TN" {% if session.get('state') == 'TN' %}selected{% endif %}>Tennessee</option>
+                            <option value="TX" {% if session.get('state') == 'TX' %}selected{% endif %}>Texas</option>
+                            <option value="UT" {% if session.get('state') == 'UT' %}selected{% endif %}>Utah</option>
+                            <option value="VT" {% if session.get('state') == 'VT' %}selected{% endif %}>Vermont</option>
+                            <option value="VA" {% if session.get('state') == 'VA' %}selected{% endif %}>Virginia</option>
+                            <option value="WA" {% if session.get('state') == 'WA' %}selected{% endif %}>Washington</option>
+                            <option value="WV" {% if session.get('state') == 'WV' %}selected{% endif %}>West Virginia</option>
+                            <option value="WI" {% if session.get('state') == 'WI' %}selected{% endif %}>Wisconsin</option>
+                            <option value="WY" {% if session.get('state') == 'WY' %}selected{% endif %}>Wyoming</option>
                         </select>
                     </div>
                 </div>
