@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Merchant Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='merchant-map.css') }}">
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzGxjSG77K2SBQi2sWtVRYimFLpHlKYmg&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2"
+      defer
+    ></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Ripple Banking</div>
+        <input type="text" class="search-bar" placeholder="Search merchants...">
+    </nav>
+
+    <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
+
+    <div class="main-container">
+        <div class="map-container">
+            <div class="map-placeholder">
+                <gmp-map center="{{ customer_lat }}, {{ customer_long }}" zoom="14" map-id="DEMO_MAP_ID">
+                    {% for merchant in merchants %}
+                    <gmp-advanced-marker position="{{ merchant['latitude'] }}, {{ merchant['longitude'] }}" title="{{ merchant['name'] }}" gmp-clickable></gmp-advanced-marker>
+                    {% endfor %}
+                </gmp-map>
+            </div>
+        </div>
+
+        <div class="merchants-list">
+            <div class="merchant-card">
+                <div class="merchant-image">[Merchant Image]</div>
+                <h3 class="merchant-name">The Coffee House</h3>
+                <div class="merchant-rating">
+                    ★★★★☆ <span>4.2 (128 reviews)</span>
+                </div>
+                <div class="merchant-details">
+                    <p>123 Main Street, Richardson, TX</p>
+                    <p>0.3 miles away</p>
+                    <p>Open until 9:00 PM</p>
+                </div>
+            </div>
+
+            <div class="merchant-card">
+                <div class="merchant-image">[Merchant Image]</div>
+                <h3 class="merchant-name">Tech Galaxy</h3>
+                <div class="merchant-rating">
+                    ★★★★★ <span>4.8 (256 reviews)</span>
+                </div>
+                <div class="merchant-details">
+                    <p>456 Oak Avenue, Richardson, TX</p>
+                    <p>0.5 miles away</p>
+                    <p>Open until 8:00 PM</p>
+                </div>
+            </div>
+
+            <div class="merchant-card">
+                <div class="merchant-image">[Merchant Image]</div>
+                <h3 class="merchant-name">Fresh Market</h3>
+                <div class="merchant-rating">
+                    ★★★★☆ <span>4.4 (189 reviews)</span>
+                </div>
+                <div class="merchant-details">
+                    <p>789 Elm Street, Richardson, TX</p>
+                    <p>0.7 miles away</p>
+                    <p>Open until 10:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
