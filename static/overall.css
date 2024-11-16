@@ -1,0 +1,137 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.logo {
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-in;
+}
+
+.logo h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    color: #4ecca3;
+}
+
+.logo p {
+    font-size: 1.2rem;
+    color: #a8a8a8;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.option-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 300px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.option-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.option-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #4ecca3;
+}
+
+.option-card p {
+    color: #d1d1d1;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.option-card button {
+    background: #4ecca3;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.option-card button:hover {
+    background: #3db892;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ripple-effect {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid #4ecca3;
+    animation: ripple 4s linear infinite;
+    opacity: 0;
+}
+
+.ripple-effect:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.ripple-effect:nth-child(3) {
+    animation-delay: 2s;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
