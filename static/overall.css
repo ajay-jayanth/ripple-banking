@@ -135,3 +135,19 @@ body {
         opacity: 0;
     }
 }
+
+.footer-link {
+    text-align: center;
+    margin-top: 2rem;
+    color: #a8a8a8;
+}
+
+.footer-link a {
+    color: #4ecca3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link a:hover {
+    color: #3db892;
+}

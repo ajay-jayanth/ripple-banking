@@ -1,0 +1,3 @@
+customer_id,first_name,last_name,dob,ssn,email,phone,address,city,state,employment_status,employer,income,occupation,account_type,debit_card,password,created_at
+RB84992258,2,2,2024-11-08,123123123,a@gmail.com,2131231231,2,2,NY,unemployed,2,2,2,savings,no,2,2024-11-16 17:07:00
+RB71754189,yesh,nath,2024-11-01,123123123,yesh@gmail.com,1231231234,123,12,VA,self-employed,2,2,2,savings,no,2,2024-11-16 17:15:04
