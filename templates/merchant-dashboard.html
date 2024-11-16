@@ -1,0 +1,72 @@
+<!-- templates/merchant-dashboard.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Merchant Dashboard - Ripple Banking</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='overall.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Left Side - Loan History -->
+      <div class="loan-history">
+        <h2>Loan History</h2>
+        <div class="loans-list">
+          {% for loan in loans %}
+          <div class="loan-card">
+            <div class="loan-header">
+              <h3>{{ loan.bank }}</h3>
+              <span class="status-badge {{ loan.status }}">
+                {% if loan.status == 'rejected' %}
+                <span class="icon">✕</span>
+                {% elif loan.status == 'current' %}
+                <span class="icon">⚠</span>
+                {% elif loan.status == 'paid' %}
+                <span class="icon">✓</span>
+                <!-- Updated icon for 'paid' status -->
+                {% endif %} {{ loan.status | title }}
+              </span>
+            </div>
+            <div class="loan-details">
+              <p>Amount: {{ loan.amount }}</p>
+              <p>Date: {{ loan.date }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Right Side - New Loan Application -->
+      <div class="new-loan">
+        <h2>New Loan Application</h2>
+        <form
+          action="window.location.href='/merchant/merchant-dashboard'"
+          method="post"
+          class="loan-form"
+        >
+          <div class="form-group">
+            <label class="radio-group-label">Select Bank:</label>
+            <div class="radio-group">
+              {% for bank in banks %}
+              <label class="radio-option">
+                <input type="radio" name="bank" value="{{ bank }}" required />
+                <span class="radio-custom"></span>
+                <span class="radio-label">{{ bank }}</span>
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <button type="submit">Submit Application</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
