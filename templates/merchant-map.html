@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Merchant Map - Ripple Banking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --background-dark: #1E213D;
+            --text-light: #ffffff;
+            --primary: #4ecca3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background-dark);
+            color: var(--text-light);
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info .customer-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .user-info .customer-id span {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .welcome-message span {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .signout-btn {
+            background: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--background-dark);
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .signout-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <h1>Ripple Banking</h1>
+        </div>
+        <div class="user-info">
+            <div class="customer-id">
+                Customer ID: <span>{{ session['customer_id'] }}</span>
+            </div>
+            <a href="{{ url_for('customer_signin') }}" class="signout-btn">Sign Out</a>
+        </div>
+    </header>
+
+    <div class="welcome-message">
+        Welcome, <span>{{ session['first_name'] }} {{ session['last_name'] }}</span>!
+    </div>
+
+    <!-- Add your merchant map content here -->
+</body>
+</html>

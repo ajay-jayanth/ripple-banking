@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Complete Your Registration - Ripple Banking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4ecca3;
+            --primary-dark: #3db892;
+            --background-dark: #1a1a2e;
+            --background-light: #16213e;
+            --text-light: #ffffff;
+            --text-muted: #a8a8a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--background-dark), var(--background-light));
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--text-muted);
+            z-index: 1;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step.active {
+            background: var(--primary);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .alert-error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4444;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #44ff44;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button,
+        .prev-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        button {
+            background: var(--primary);
+            color: var(--background-dark);
+        }
+
+        .prev-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        button:hover,
+        .prev-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: var(--text-muted);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            height: 2px;
+            background: var(--primary);
+            z-index: 1;
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+            width: calc((100% - 80px) * {{ (step - 1) / 3 }});
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: var(--background-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="step-indicator">
+            <div class="step {% if step >= 1 %}active{% endif %}">1</div>
+            <div class="step {% if step >= 2 %}active{% endif %}">2</div>
+            <div class="step {% if step >= 3 %}active{% endif %}">3</div>
+            <div class="step {% if step >= 4 %}active{% endif %}">4</div>
+            <div class="step-line"></div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('customer_signup') }}">
+            <input type="hidden" name="current_step" value="{{ step }}">
+            
+            <!-- Step 1: Personal Information -->
+            {% if step == 1 %}
+            <div class="form-step active">
+                <h2>Personal Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="{{ session.get('firstName', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" value="{{ session.get('lastName', '') }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" value="{{ session.get('dob', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="ssn">Social Security Number</label>
+                    <input type="password" id="ssn" name="ssn" value="{{ session.get('ssn', '') }}" pattern="\d{9}" required>
+                </div>
+                <div class="button-group">
+                    <div></div>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 2: Contact Information -->
+            {% if step == 2 %}
+            <div class="form-step active">
+                <h2>Contact Information</h2>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ session.get('email', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Mobile Phone</label>
+                    <input type="tel" id="phone" name="phone" value="{{ session.get('phone', '') }}" pattern="\d{10}" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Street Address</label>
+                    <input type="text" id="address" name="address" value="{{ session.get('address', '') }}" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" value="{{ session.get('city', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <select id="state" name="state" required>
+                            <option value="">Select State</option>
+                            <option value="CA" {% if session.get('state') == 'CA' %}selected{% endif %}>California</option>
+                            <option value="NY" {% if session.get('state') == 'NY' %}selected{% endif %}>New York</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('customer_signup', step=1) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 3: Employment & Income -->
+            {% if step == 3 %}
+            <div class="form-step active">
+                <h2>Employment & Income</h2>
+                <div class="form-group">
+                    <label for="employmentStatus">Employment Status</label>
+                    <select id="employmentStatus" name="employmentStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="employed" {% if session.get('employmentStatus') == 'employed' %}selected{% endif %}>Employed</option>
+                        <option value="self-employed" {% if session.get('employmentStatus') == 'self-employed' %}selected{% endif %}>Self-Employed</option>
+                        <option value="unemployed" {% if session.get('employmentStatus') == 'unemployed' %}selected{% endif %}>Unemployed</option>
+                        <option value="retired" {% if session.get('employmentStatus') == 'retired' %}selected{% endif %}>Retired</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employer">Employer Name</label>
+                    <input type="text" id="employer" name="employer" value="{{ session.get('employer', '') }}">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="income">Annual Income</label>
+                        <input type="number" id="income" name="income" value="{{ session.get('income', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation">Occupation</label>
+                        <input type="text" id="occupation" name="occupation" value="{{ session.get('occupation', '') }}" required>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('customer_signup', step=2) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 4: Account Setup -->
+            {% if step == 4 %}
+            <div class="form-step active">
+                <h2>Account Setup</h2>
+                <div class="form-group">
+                    <label for="accountType">Account Type</label>
+                    <select id="accountType" name="accountType" required>
+                        <option value="">Select Account Type</option>
+                        <option value="checking" {% if session.get('accountType') == 'checking' %}selected{% endif %}>Checking Account</option>
+                        <option value="savings" {% if session.get('accountType') == 'savings' %}selected{% endif %}>Savings Account</option>
+                        <option value="both" {% if session.get('accountType') == 'both' %}selected{% endif %}>Both Accounts</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="debitCard">Debit Card Preference</label>
+                    <select id="debitCard" name="debitCard" required>
+                        <option value="">Select Preference</option>
+                        <option value="yes" {% if session.get('debitCard') == 'yes' %}selected{% endif %}>Yes, I want a debit card</option>
+                        <option value="no" {% if session.get('debitCard') == 'no' %}selected{% endif %}>No debit card needed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">Create Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('customer_signup', step=3) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Complete Registration</button>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
