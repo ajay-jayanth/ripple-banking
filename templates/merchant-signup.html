@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Merchant Signup - Ripple Banking</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --background-dark: #1E213D;
+            --text-light: #ffffff;
+            --primary: #4ecca3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background-dark);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .flash-message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .flash-message.error {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .flash-message.success {
+            background: rgba(0, 200, 81, 0.2);
+            color: #00C851;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .step.active {
+            background: var(--primary);
+            color: var(--background-dark);
+        }
+
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button-group a,
+        .button-group button {
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .button-group button {
+            background: var(--primary);
+            color: var(--background-dark);
+        }
+
+        .button-group button:hover,
+        .button-group a:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="step-indicator">
+            <div class="step {% if step >= 1 %}active{% endif %}">1</div>
+            <div class="step {% if step >= 2 %}active{% endif %}">2</div>
+            <div class="step {% if step >= 3 %}active{% endif %}">3</div>
+            <div class="step {% if step >= 4 %}active{% endif %}">4</div>
+            <div class="step-line"></div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('merchant_signup') }}">
+            <input type="hidden" name="current_step" value="{{ step }}">
+            
+            <!-- Step 1: Business Information -->
+            {% if step == 1 %}
+            <div class="form-step active">
+                <h2>Business Information</h2>
+                <div class="form-group">
+                    <label for="businessName">Business Name</label>
+                    <input type="text" id="businessName" name="businessName" value="{{ form_data.get('businessName', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="businessType">Business Type</label>
+                    <select id="businessType" name="businessType" required>
+                        <option value="">Select Type</option>
+                        <option value="retail" {% if form_data.get('businessType') == 'retail' %}selected{% endif %}>Retail</option>
+                        <option value="restaurant" {% if form_data.get('businessType') == 'restaurant' %}selected{% endif %}>Restaurant</option>
+                        <option value="service" {% if form_data.get('businessType') == 'service' %}selected{% endif %}>Service</option>
+                        <option value="ecommerce" {% if form_data.get('businessType') == 'ecommerce' %}selected{% endif %}>E-Commerce</option>
+                        <option value="other" {% if form_data.get('businessType') == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ein">EIN (Tax ID)</label>
+                        <input type="text" id="ein" name="ein" value="{{ form_data.get('ein', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="yearsInBusiness">Years in Business</label>
+                        <input type="number" id="yearsInBusiness" name="yearsInBusiness" value="{{ form_data.get('yearsInBusiness', '') }}" required>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <div></div>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 2: Contact Information -->
+            {% if step == 2 %}
+            <div class="form-step active">
+                <h2>Contact Information</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" value="{{ form_data.get('firstName', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" value="{{ form_data.get('lastName', '') }}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" value="{{ form_data.get('email', '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ form_data.get('phone', '') }}" pattern="\d{10}" required>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('merchant_signup', step=1) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 3: Address and Business Hours -->
+            {% if step == 3 %}
+            <div class="form-step active">
+                <h2>Address and Business Hours</h2>
+                <div class="form-group">
+                    <label for="address">Street Address</label>
+                    <input type="text" id="address" name="address" value="{{ form_data.get('address', '') }}" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" value="{{ form_data.get('city', '') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <select id="state" name="state" required>
+                            <option value="">Select State</option>
+                            <option value="AL" {% if form_data.get('state') == 'AL' %}selected{% endif %}>Alabama</option>
+                            <option value="AK" {% if form_data.get('state') == 'AK' %}selected{% endif %}>Alaska</option>
+                            <option value="AZ" {% if form_data.get('state') == 'AZ' %}selected{% endif %}>Arizona</option>
+                            <option value="AR" {% if form_data.get('state') == 'AR' %}selected{% endif %}>Arkansas</option>
+                            <option value="CA" {% if form_data.get('state') == 'CA' %}selected{% endif %}>California</option>
+                            <option value="CO" {% if form_data.get('state') == 'CO' %}selected{% endif %}>Colorado</option>
+                            <option value="CT" {% if form_data.get('state') == 'CT' %}selected{% endif %}>Connecticut</option>
+                            <option value="DE" {% if form_data.get('state') == 'DE' %}selected{% endif %}>Delaware</option>
+                            <option value="DC" {% if form_data.get('state') == 'DC' %}selected{% endif %}>District of Columbia</option>
+                            <option value="FL" {% if form_data.get('state') == 'FL' %}selected{% endif %}>Florida</option>
+                            <option value="GA" {% if form_data.get('state') == 'GA' %}selected{% endif %}>Georgia</option>
+                            <option value="HI" {% if form_data.get('state') == 'HI' %}selected{% endif %}>Hawaii</option>
+                            <option value="ID" {% if form_data.get('state') == 'ID' %}selected{% endif %}>Idaho</option>
+                            <option value="IL" {% if form_data.get('state') == 'IL' %}selected{% endif %}>Illinois</option>
+                            <option value="IN" {% if form_data.get('state') == 'IN' %}selected{% endif %}>Indiana</option>
+                            <option value="IA" {% if form_data.get('state') == 'IA' %}selected{% endif %}>Iowa</option>
+                            <option value="KS" {% if form_data.get('state') == 'KS' %}selected{% endif %}>Kansas</option>
+                            <option value="KY" {% if form_data.get('state') == 'KY' %}selected{% endif %}>Kentucky</option>
+                            <option value="LA" {% if form_data.get('state') == 'LA' %}selected{% endif %}>Louisiana</option>
+                            <option value="ME" {% if form_data.get('state') == 'ME' %}selected{% endif %}>Maine</option>
+                            <option value="MD" {% if form_data.get('state') == 'MD' %}selected{% endif %}>Maryland</option>
+                            <option value="MA" {% if form_data.get('state') == 'MA' %}selected{% endif %}>Massachusetts</option>
+                            <option value="MI" {% if form_data.get('state') == 'MI' %}selected{% endif %}>Michigan</option>
+                            <option value="MN" {% if form_data.get('state') == 'MN' %}selected{% endif %}>Minnesota</option>
+                            <option value="MS" {% if form_data.get('state') == 'MS' %}selected{% endif %}>Mississippi</option>
+                            <option value="MO" {% if form_data.get('state') == 'MO' %}selected{% endif %}>Missouri</option>
+                            <option value="MT" {% if form_data.get('state') == 'MT' %}selected{% endif %}>Montana</option>
+                            <option value="NE" {% if form_data.get('state') == 'NE' %}selected{% endif %}>Nebraska</option>
+                            <option value="NV" {% if form_data.get('state') == 'NV' %}selected{% endif %}>Nevada</option>
+                            <option value="NH" {% if form_data.get('state') == 'NH' %}selected{% endif %}>New Hampshire</option>
+                            <option value="NJ" {% if form_data.get('state') == 'NJ' %}selected{% endif %}>New Jersey</option>
+                            <option value="NM" {% if form_data.get('state') == 'NM' %}selected{% endif %}>New Mexico</option>
+                            <option value="NY" {% if form_data.get('state') == 'NY' %}selected{% endif %}>New York</option>
+                            <option value="NC" {% if form_data.get('state') == 'NC' %}selected{% endif %}>North Carolina</option>
+                            <option value="ND" {% if form_data.get('state') == 'ND' %}selected{% endif %}>North Dakota</option>
+                            <option value="OH" {% if form_data.get('state') == 'OH' %}selected{% endif %}>Ohio</option>
+                            <option value="OK" {% if form_data.get('state') == 'OK' %}selected{% endif %}>Oklahoma</option>
+                            <option value="OR" {% if form_data.get('state') == 'OR' %}selected{% endif %}>Oregon</option>
+                            <option value="PA" {% if form_data.get('state') == 'PA' %}selected{% endif %}>Pennsylvania</option>
+                            <option value="RI" {% if form_data.get('state') == 'RI' %}selected{% endif %}>Rhode Island</option>
+                            <option value="SC" {% if form_data.get('state') == 'SC' %}selected{% endif %}>South Carolina</option>
+                            <option value="SD" {% if form_data.get('state') == 'SD' %}selected{% endif %}>South Dakota</option>
+                            <option value="TN" {% if form_data.get('state') == 'TN' %}selected{% endif %}>Tennessee</option>
+                            <option value="TX" {% if form_data.get('state') == 'TX' %}selected{% endif %}>Texas</option>
+                            <option value="UT" {% if form_data.get('state') == 'UT' %}selected{% endif %}>Utah</option>
+                            <option value="VT" {% if form_data.get('state') == 'VT' %}selected{% endif %}>Vermont</option>
+                            <option value="VA" {% if form_data.get('state') == 'VA' %}selected{% endif %}>Virginia</option>
+                            <option value="WA" {% if form_data.get('state') == 'WA' %}selected{% endif %}>Washington</option>
+                            <option value="WV" {% if form_data.get('state') == 'WV' %}selected{% endif %}>West Virginia</option>
+                            <option value="WI" {% if form_data.get('state') == 'WI' %}selected{% endif %}>Wisconsin</option>
+                            <option value="WY" {% if form_data.get('state') == 'WY' %}selected{% endif %}>Wyoming</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zipCode">Zip Code</label>
+                    <input type="text" id="zipCode" name="zipCode" value="{{ form_data.get('zipCode', '') }}" pattern="\d{5}" required>
+                </div>
+                <div class="form-group">
+                    <label for="businessHours">Business Hours</label>
+                    <input type="text" id="businessHours" name="businessHours" value="{{ form_data.get('businessHours', '') }}" required>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('merchant_signup', step=2) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Next</button>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Step 4: Security Setup -->
+            {% if step == 4 %}
+            <div class="form-step active">
+                <h2>Security Setup</h2>
+                <div class="form-group">
+                    <label for="password">Create Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="securityQuestion">Security Question</label>
+                    <select id="securityQuestion" name="securityQuestion" required>
+                        <option value="">Select a Security Question</option>
+                        <option value="first_pet">What was the name of your first pet?</option>
+                        <option value="mother_maiden">What is your mother's maiden name?</option>
+                        <option value="birth_city">In which city were you born?</option>
+                        <option value="first_car">What was your first car?</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="securityAnswer">Security Answer</label>
+                    <input type="text" id="securityAnswer" name="securityAnswer" required>
+                </div>
+                <div class="button-group">
+                    <a href="{{ url_for('merchant_signup', step=3) }}" class="prev-btn">Previous</a>
+                    <button type="submit">Complete Registration</button>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

@@ -5,6 +5,7 @@ import csv
 import re
 import random
 from typing import Dict
+import pandas as pd
 import string
 
 
@@ -172,3 +173,264 @@ def customer_signin_fn():
 def customer_session(customer: Dict):
     for key in customer:
         session[key] = customer[key]
+
+# merchent stuff
+
+MERCHANT_CSV_PATH = os.path.join(os.getcwd(), 'merchants.csv')
+
+def generate_merchant_id():
+    """Generate a unique merchant ID in the format 'MC' followed by 8 digits"""
+    return f"MC{''.join(random.choices(string.digits, k=8))}"
+
+def ensure_merchant_csv_exists():
+    """Create merchants CSV with proper columns if it doesn't exist"""
+    if not os.path.exists(MERCHANT_CSV_PATH):
+        df = pd.DataFrame(columns=[
+            'merchant_id', 'business_name', 'business_type', 'ein', 'years_in_business',
+            'email', 'phone', 'website', 'first_name', 'last_name',
+            'address', 'city', 'state', 'zip_code', 'business_hours',
+            'bank_name', 'account_number', 'routing_number', 'monthly_revenue',
+            'password', 'security_question', 'security_answer', 'created_at'
+        ])
+        df.to_csv(MERCHANT_CSV_PATH, index=False)
+
+def save_merchant_data(form_data):
+    """Save merchant data to the CSV file."""
+    ensure_merchant_csv_exists()
+    merchant_id = generate_merchant_id()
+
+    merchant_data = {
+        'merchant_id': merchant_id,
+        'business_name': form_data.get('businessName', ''),
+        'business_type': form_data.get('businessType', ''),
+        'ein': form_data.get('ein', ''),
+        'years_in_business': form_data.get('yearsInBusiness', ''),
+        'email': form_data.get('email', ''),
+        'phone': form_data.get('phone', ''),
+        'website': form_data.get('website', ''),
+        'first_name': form_data.get('firstName', ''),
+        'last_name': form_data.get('lastName', ''),
+        'address': form_data.get('address', ''),
+        'city': form_data.get('city', ''),
+        'state': form_data.get('state', ''),
+        'zip_code': form_data.get('zipCode', ''),
+        'business_hours': form_data.get('businessHours', ''),
+        'bank_name': form_data.get('bankName', ''),
+        'account_number': form_data.get('accountNumber', ''),
+        'routing_number': form_data.get('routingNumber', ''),
+        'monthly_revenue': form_data.get('monthlyRevenue', ''),
+        'password': form_data.get('password', ''),
+        'security_question': form_data.get('securityQuestion', ''),
+        'security_answer': form_data.get('securityAnswer', ''),
+        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    }
+
+    try:
+        with open(MERCHANT_CSV_PATH, 'a', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=merchant_data.keys())
+            if os.stat(MERCHANT_CSV_PATH).st_size == 0:
+                writer.writeheader()
+            writer.writerow(merchant_data)
+    except Exception as e:
+        print(f"Error saving merchant data: {e}")
+        raise e
+
+    return merchant_id
+
+def check_email_exists(email):
+    """Check if email already exists in merchants database"""
+    if os.path.exists(MERCHANT_CSV_PATH):
+        df = pd.read_csv(MERCHANT_CSV_PATH)
+        return email in df['email'].values
+    return False
+
+
+def verify_merchant(email, password):
+    """Verify merchant credentials using pandas"""
+    if not os.path.exists(MERCHANT_CSV_PATH):
+        print(f"DEBUG: CSV file not found at {MERCHANT_CSV_PATH}")
+        return None
+    
+    try:
+        df = pd.read_csv(MERCHANT_CSV_PATH)
+        print(f"DEBUG: Found {len(df)} merchants in CSV")
+        
+        # Replace NaN values with empty strings
+        df = df.fillna('')
+        
+        # Clean the data before comparison
+        df['email'] = df['email'].astype(str).str.strip()
+        df['password'] = df['password'].astype(str).str.strip()
+        email = str(email).strip()
+        password = str(password).strip()
+        
+        # Debug prints
+        print(f"DEBUG: Looking for email: {email}")
+        email_matches = df[df['email'] == email]
+        if not email_matches.empty:
+            print(f"DEBUG: Found email match. Stored password: '{email_matches.iloc[0]['password']}'")
+            print(f"DEBUG: Provided password: '{password}'")
+        
+        merchant = df[(df['email'] == email) & (df['password'] == password)]
+        print(f"DEBUG: Full credentials match: {len(merchant)}")
+        
+        if not merchant.empty:
+            # Convert numpy/pandas types to Python native types
+            return {
+                'merchant_id': str(merchant.iloc[0]['merchant_id']),
+                'business_name': str(merchant.iloc[0]['business_name']),
+                'email': str(merchant.iloc[0]['email'])
+            }
+    except Exception as e:
+        print(f"DEBUG: Error verifying merchant: {str(e)}")
+    return None
+
+def merchant_signin_fn():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        print(f"DEBUG: Login attempt - Email: {email}")
+        
+        if not email or not password:
+            flash('Please enter both email and password.', 'error')
+            return render_template('merchant-signin.html')
+        
+        merchant = verify_merchant(email, password)
+        print(f"DEBUG: Verify merchant result: {merchant}")
+        
+        if merchant:
+            print("DEBUG: Login successful, setting session")
+            # Ensure all values are JSON serializable
+            session['merchant_id'] = str(merchant['merchant_id'])
+            session['business_name'] = str(merchant['business_name'])
+            session['email'] = str(merchant['email'])
+            return redirect(url_for('merchant_dashboard'))
+        else:
+            print("DEBUG: Login failed - invalid credentials")
+            flash('Invalid email or password.', 'error')
+            return render_template('merchant-signin.html')
+    
+    return render_template('merchant-signin.html')
+
+def validate_merchant_step(step_num, form_data):
+    """Validate required fields for each step in the merchant signup process."""
+    required_fields = {
+        1: ['businessName', 'businessType', 'ein', 'yearsInBusiness'],
+        2: ['email', 'phone', 'firstName', 'lastName'],
+        3: ['address', 'city', 'state', 'zipCode', 'businessHours'],
+        4: ['password', 'confirmPassword', 'securityQuestion', 'securityAnswer'],  # This was previously step 5
+    }
+    is_valid = all(form_data.get(field) for field in required_fields.get(step_num, []))
+    
+    if not is_valid:
+        missing_fields = [field for field in required_fields.get(step_num, []) if not form_data.get(field)]
+        print(f"[DEBUG] Step {step_num} - Missing fields: {missing_fields}")
+    
+    print(f"[DEBUG] Step {step_num} validation result: {is_valid}")
+    return is_valid
+
+def ensure_merchant_csv_exists():
+    """Create merchants CSV with proper columns if it doesn't exist"""
+    if not os.path.exists(MERCHANT_CSV_PATH):
+        df = pd.DataFrame(columns=[
+            'merchant_id', 'business_name', 'business_type', 'ein', 'years_in_business',
+            'email', 'phone', 'website', 'first_name', 'last_name',
+            'address', 'city', 'state', 'zip_code', 'business_hours',
+            'password', 'security_question', 'security_answer', 'created_at'
+        ])
+        df.to_csv(MERCHANT_CSV_PATH, index=False)
+
+def save_merchant_data(form_data):
+    """Save merchant data to the CSV file."""
+    ensure_merchant_csv_exists()
+    merchant_id = generate_merchant_id()
+
+    merchant_data = {
+        'merchant_id': merchant_id,
+        'business_name': form_data.get('businessName', ''),
+        'business_type': form_data.get('businessType', ''),
+        'ein': form_data.get('ein', ''),
+        'years_in_business': form_data.get('yearsInBusiness', ''),
+        'email': form_data.get('email', ''),
+        'phone': form_data.get('phone', ''),
+        'website': form_data.get('website', ''),
+        'first_name': form_data.get('firstName', ''),
+        'last_name': form_data.get('lastName', ''),
+        'address': form_data.get('address', ''),
+        'city': form_data.get('city', ''),
+        'state': form_data.get('state', ''),
+        'zip_code': form_data.get('zipCode', ''),
+        'business_hours': form_data.get('businessHours', ''),
+        'password': form_data.get('password', ''),  # Make sure password is properly saved
+        'security_question': form_data.get('securityQuestion', ''),
+        'security_answer': form_data.get('securityAnswer', ''),
+        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        # Add empty values for unused bank fields to prevent NaN
+        'bank_name': '',
+        'account_number': '',
+        'routing_number': '',
+        'monthly_revenue': ''
+    }
+
+    print(f"DEBUG: Saving merchant data with password: {merchant_data['password']}")  # Debug line
+
+    try:
+        df = pd.read_csv(MERCHANT_CSV_PATH) if os.path.exists(MERCHANT_CSV_PATH) else pd.DataFrame()
+        df = pd.concat([df, pd.DataFrame([merchant_data])], ignore_index=True)
+        df.to_csv(MERCHANT_CSV_PATH, index=False)
+        print(f"DEBUG: Merchant data saved successfully")
+    except Exception as e:
+        print(f"Error saving merchant data: {e}")
+        raise e
+
+    return merchant_id
+
+def merchant_signup_fn():
+    """Handle merchant signup with step-by-step control."""
+    if request.method == 'POST':
+        current_step = int(request.form.get('current_step', 1))
+        form_data = request.form.to_dict()
+        
+        if 'merchant_data' not in session:
+            session['merchant_data'] = {}
+        
+        merchant_data = dict(session['merchant_data'])
+        merchant_data.update(form_data)
+        session['merchant_data'] = merchant_data
+        
+        print(f"[DEBUG] After updating session data at Step {current_step}: {session['merchant_data']}")
+
+        if not validate_merchant_step(current_step, session['merchant_data']):
+            flash('Please fill in all required fields.', 'error')
+            return render_template('merchant-signup.html', step=current_step, form_data=session['merchant_data'])
+
+        try:
+            if current_step == 2:
+                email = session['merchant_data'].get('email')
+                if check_email_exists(email):
+                    flash('This email is already registered.', 'error')
+                    return render_template('merchant-signup.html', step=current_step, form_data=session['merchant_data'])
+
+            if current_step == 4:  # This was previously step 5
+                if session['merchant_data'].get('password') != session['merchant_data'].get('confirmPassword'):
+                    flash('Passwords do not match.', 'error')
+                    return render_template('merchant-signup.html', step=current_step, form_data=session['merchant_data'])
+
+                merchant_data = dict(session['merchant_data'])
+                session.pop('merchant_data', None)
+                merchant_id = save_merchant_data(merchant_data)
+                flash(f'Registration successful! Your Merchant ID is {merchant_id}.', 'success')
+                return redirect(url_for('merchant_signin'))
+
+            next_step = current_step + 1
+            return render_template('merchant-signup.html', step=next_step, form_data=session['merchant_data'])
+
+        except Exception as e:
+            print(f"Error: {e}")
+            flash('An unexpected error occurred.', 'error')
+            return render_template('merchant-signup.html', step=current_step, form_data=session['merchant_data'])
+
+    step = int(request.args.get('step', 1))
+    return render_template('merchant-signup.html', step=step, form_data=session.get('merchant_data', {}))
+
