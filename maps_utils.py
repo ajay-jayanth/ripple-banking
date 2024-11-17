@@ -45,6 +45,7 @@ def merchant_maps_fn():
     richardson_default = (32.948334, -96.729851)
     customer_lat = session.get('customer_lat', richardson_default[0])
     customer_long = session.get('customer_long', richardson_default[1])
+    address = session['address_combined']
     merchants = get_merchants()
 
     return render_template(
@@ -54,7 +55,8 @@ def merchant_maps_fn():
         merchants=merchants,
 
         first_name=session['first_name'],
-        email=session['email']
+        email=session['email'],
+        customer_address=address
     )
     
 if __name__ == '__main__':
