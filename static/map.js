@@ -87,7 +87,7 @@ async function initMap() {
       position: { lat: CUSTOMER_LAT, lng: CUSTOMER_LNG },
       map: map,
       icon: {
-          url: '/static/images/frog.jpg',
+          url: '/static/images/frog.png',
           scaledSize: new google.maps.Size(70, 70),
           anchor: new google.maps.Point(15, 15)
       },
