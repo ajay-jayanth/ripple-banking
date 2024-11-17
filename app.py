@@ -218,7 +218,7 @@ def save_merchant_session():
     session['risk_score'] = int(row.get('risk_score', 65))
     return redirect(url_for('request_loan_page'))
 
-@app.route('/customer/customer-loans', methods=['GET', 'POST'])
+@app.route('/customer/customer-loans', methods=['POST'])
 def customer_loans():
     if request.method == 'POST':
         # Validate required form fields
@@ -229,6 +229,11 @@ def customer_loans():
         try:
             CUST_APP_CSV = 'static/data/customer_applications.csv'
             df = pd.read_csv(CUST_APP_CSV)
+            customers_df = pd.read_csv('customers.csv').set_index('first_name')
+            cust_row = customers_df.loc[session['first_name']]
+            ph_number = str(cust_row['phone'])
+            ph_number = f'({ph_number[:3]}) {ph_number[3:6]}-{ph_number[-4:]}'
+            email = cust_row['email']
             
             # Convert and validate amount
             try:
@@ -237,7 +242,8 @@ def customer_loans():
                     raise ValueError("Loan amount must be positive")
             except ValueError as e:
                 flash(f'Invalid loan amount: {str(e)}', 'error')
-                return redirect(url_for('customer_loans'))
+                return redirect(url_for('request_loan_page'))
+            
             
             # Generate realistic random values
             monthly_income = max(loan_amount + random.randint(700, 3000), 2000)  # Ensure minimum income
@@ -267,33 +273,34 @@ def customer_loans():
                 'recent_credit_inquiries': random.randint(0, 6),
                 'existing_debts': float(debt_amount + random.randint(1500, 6000)),
                 'savings_and_assets': float(monthly_income + random.randint(-1000, 3000)),
-                'employment_stability_years': random.randint(1, 10)
+                'employment_stability_years': random.randint(1, 10),
+                'phone_number': ph_number,
+                'email': email
             }
-            
-            # Safely append new row to DataFrame
+            session['loan_title'] = f'{new_application["purpose"]} Loan'
+            session['amount'] = f'{loan_amount:,.2f}'
+            session['monthly_payment'] = f'{loan_amount/12:,.2f}'
+            # session['']
+
             try:
                 df = pd.concat([df, pd.DataFrame([new_application])], ignore_index=True)
                 df.to_csv(CUST_APP_CSV, index=False)
                 flash('Loan application submitted successfully!', 'success')
             except Exception as e:
                 flash(f'Error saving application: {str(e)}', 'error')
-                return redirect(url_for('customer_loans'))
+                return redirect(url_for('request_loan_page'))
 
         except Exception as e:
             flash(f'An error occurred: {str(e)}', 'error')
-            return redirect(url_for('customer_loans'))
+            return redirect(url_for('request_loan_page'))
 
-        return redirect(url_for('customer_loans'))
+        return redirect(url_for('my_loans'))
 
-    # For GET request, show existing loans
-    try:
-        # You might want to load and display existing loans here
-        return render_template('customer-loans.html')
-    except Exception as e:
-        flash(f'Error loading loans: {str(e)}', 'error')
-        return redirect(url_for('index'))
-
-# TODO: Sign out from my loans, and populate it
+@app.route('/customer/my_loans')
+def my_loans():
+    return render_template(
+        'customer-loans.html',
+    )
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)

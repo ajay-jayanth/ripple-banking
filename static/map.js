@@ -11,8 +11,8 @@ async function initMap() {
       rippleDiv.style.cssText = `
           position: absolute;
           pointer-events: none;
-          width: 100px;
-          height: 100px;
+          width: 200px;
+          height: 200px;
           transform: translate(-50%, -50%);
       `;
 
@@ -24,7 +24,7 @@ async function initMap() {
               width: 100%;
               height: 100%;
               border-radius: 50%;
-              border: 2px solid #4ecca3;
+              border: 4px solid #4ecca3;
               opacity: 0;
           `;
           rippleDiv.appendChild(ripple);

@@ -295,23 +295,113 @@
                 transform: translateY(0);
             }
         }
+
+        .sign-out {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100; /* Ensure it stays on top */
+        }
+
+        .sign-out button {
+            background: rgba(78, 204, 163, 0.2); /* Light version of your theme color */
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: #4ecca3; /* Matching color from your theme */
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 2px solid #4ecca3; /* Border with the same green color */
+        }
+
+        .sign-out button:hover {
+            background: rgba(78, 204, 163, 0.3); /* Darker shade on hover */
+            border-color: #3db892; /* Slightly darker border on hover */
+        }
+
     </style>
 </head>
 <body>
+    <div class="sign-out">
+        <button onclick="window.location.href='/'">Sign Out</button>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>My Loans</h1>
             <button class="back-button" onclick="window.location.href='/customer/merchant-map'">← Find another loan</button>
         </div>
 
-        <!-- First Loan Card -->
         <div class="loan-card">
             <div class="loan-header">
                 <div>
-                    <h2 class="loan-title">Business Equipment Loan</h2>
-                    <p class="loan-merchant">Loaned from: Tech Galaxy</p>
+                    <h2 class="loan-title">{{ session['loan_title'] }}</h2>
+                    <p class="loan-merchant">Loaned from: {{ session['merchant_name'] }}</p>
                 </div>
                 <span class="loan-status status-active">Active</span>
+            </div>
+
+            <div class="loan-details-grid">
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <i data-lucide="circle-dollar-sign"></i>
+                        <span>Total Loan Amount</span>
+                    </div>
+                    <div class="detail-value">${{session['amount']}}</div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <i data-lucide="wallet"></i>
+                        <span>Remaining Balance</span>
+                    </div>
+                    <div class="detail-value">${{session['amount']}}</div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <i data-lucide="trending-up"></i>
+                        <span>Monthly Payment</span>
+                    </div>
+                    <div class="detail-value">${{session['monthly_payment']}}</div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="detail-header">
+                        <i data-lucide="calendar"></i>
+                        <span>Next Payment Due</span>
+                    </div>
+                    <div class="detail-value">Dec 15, 2025</div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" style="width: 0%"></div>
+                </div>
+                <div class="progress-labels">
+                    <span>0% Paid</span>
+                    <span>$0.00 of ${{session['amount']}}</span>
+                </div>
+            </div>
+            
+            <div class="payment-section">
+                <form class="payment-form">
+                    <input type="number" class="payment-input" placeholder="Enter payment amount" min="1" step="0.01">
+                    <button type="submit" class="payment-button">Make Payment</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="loan-card">
+            <div class="loan-header">
+                <div>
+                    <h2 class="loan-title">Farming Equipment Loan</h2>
+                    <p class="loan-merchant">Loaned from: Tyler Johnson</p>
+                </div>
+                <span class="loan-status status-active">Completed</span>
             </div>
 
             <div class="loan-details-grid">
@@ -328,7 +418,7 @@
                         <i data-lucide="wallet"></i>
                         <span>Remaining Balance</span>
                     </div>
-                    <div class="detail-value">$6,500.00</div>
+                    <div class="detail-value">$0.00</div>
                 </div>
 
                 <div class="detail-card">
@@ -338,32 +428,24 @@
                     </div>
                     <div class="detail-value">$500.00</div>
                 </div>
-
-                <div class="detail-card">
-                    <div class="detail-header">
-                        <i data-lucide="calendar"></i>
-                        <span>Next Payment Due</span>
-                    </div>
-                    <div class="detail-value">Dec 15, 2024</div>
-                </div>
             </div>
 
             <div class="progress-container">
                 <div class="progress-bar">
-                    <div class="progress" style="width: 35%"></div>
+                    <div class="progress" style="width: 100%"></div>
                 </div>
                 <div class="progress-labels">
-                    <span>35% Paid</span>
-                    <span>$3,500.00 of $10,000.00</span>
+                    <span>100% Paid</span>
+                    <span>$10,000.00 of $10,000.00</span>
                 </div>
             </div>
 
-            <div class="payment-section">
+            <!-- <div class="payment-section">
                 <form class="payment-form">
                     <input type="number" class="payment-input" placeholder="Enter payment amount" min="1" step="0.01">
                     <button type="submit" class="payment-button">Make Payment</button>
                 </form>
-            </div>
+            </div> -->
 
             <!-- Payment History Section (preserved from original) -->
             <div class="history-section">
@@ -420,45 +502,3 @@
                 </div>
             </div>
         </div>
-
-        <!-- Second Loan Card (with same enhanced structure)
-        <div class="loan-card">
-            <div class="loan-header">
-                <div>
-                    <h2 class="loan-title">Inventory Financing</h2>
-                    <p class="loan-merchant">Loaned from: Fresh Market</p>
-                </div>
-                <span class="loan-status status-active">Active</span>
-            </div>
-
-            <div class="loan-details-grid">
-                <div class="detail-card">
-                    <div class="detail-header">
-                        <i data-lucide="circle-dollar-sign"></i>
-                        <span>Total Loan Amount</span>
-                    </div>
-                    <div class="detail-value">$5,000.00</div>
-                </div>
-
-                <div class="detail-card">
-                    <div class="detail-header">
-                        <i data-lucide="wallet"></i>
-                        <span>Remaining Balance</span>
-                    </div>
-                    <div class="detail-value">$2,000.00</div>
-                </div>
-
-                <div class="detail-card">
-                    <div class="detail-header">
-                        <i data-lucide="trending-up"></i>
-                        <span>Monthly Payment</span>
-                    </div>
-                    <div class="detail-value">$250.00</div>
-                </div>
-
-                <div class="detail-card">
-                    <div class="detail-header">
-                        <i data-lucide="calendar"></i>
-                        <span>Next Payment Due</span>
-                    </div>
-                    <div class -->
