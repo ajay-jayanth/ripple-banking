@@ -5,10 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/merchant-map.css') }}">
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzGxjSG77K2SBQi2sWtVRYimFLpHlKYmg&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2"
-      defer
-    ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzGxjSG77K2SBQi2sWtVRYimFLpHlKYmg&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2" defer></script>
+    <script>
+        // Store coordinates in global variables
+        const CUSTOMER_LAT = {{ customer_lat|float }};
+        const CUSTOMER_LNG = {{ customer_long|float }};
+        const CUSTOMER_ADDRESS = "{{ session.address_combined }}";
+    </script>
     <script src="{{ url_for('static', filename='map.js') }}"></script>
 </head>
 <body>
@@ -19,71 +22,65 @@
 
     <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
 
+    <script>
+        const customerLat = {{ customer_lat }};
+        const customerLong = {{ customer_long }};
+        const merchantList = {{ merchants|tojson|safe }};
+    </script>
     <div class="main-container">
         <div class="map-container">
-            <div class="map-placeholder">
-                <gmp-map center="{{ customer_lat }}, {{ customer_long }}" zoom="14" map-id="DEMO_MAP_ID">
-                    {% for merchant in merchants %}
-                    <gmp-advanced-marker position="{{ merchant['latitude'] }}, {{ merchant['longitude'] }}" title="{{ merchant['name'] }}" gmp-clickable></gmp-advanced-marker>
-                    {% endfor %}
-                </gmp-map>
-            </div>
+            <div class="map-placeholder"></div>
         </div>
 
         <div class="merchants-list">
+            <div class="filters">
+                <button class="filter-btn">Recommended</button>
+                <button class="filter-btn">Closest</button>
+                <button class="filter-btn">Highest Rated</button>
+            </div>
+
             {% for merchant in merchants %}
-            <div class="merchant-card">
+            <div class="merchant-card" 
+                 data-lat="{{ merchant.latitude }}" 
+                 data-lng="{{ merchant.longitude }}"
+                 data-name="{{ merchant.name }}">
                 <div class="merchant-image">[Merchant Image]</div>
-                <h3 class="merchant-name">{{ merchant['name'] }}</h3>
+                <h3 class="merchant-name">{{ merchant.name }}</h3>
                 <div class="merchant-rating">
-                    {{merchant['stars']}} <span>{{merchant['rating']}} ({{merchant['reviews']}} reviews)</span>
+                    {{ merchant.stars }} 
+                    <span>{{ merchant.rating }} ({{ merchant.reviews }} reviews)</span>
                 </div>
                 <div class="merchant-details">
-                    <p>{{merchant['address']}}</p>
-                    <p>0.3 miles away</p>
-                    <p>Open until 9:00 PM</p>
+                    <p>{{ merchant.address }}</p>
+                    <p>{{ "%.1f"|format(merchant.distance|default(0)|float) }} miles away</p>
+                    <p>{{ merchant.business_hours|default('Hours not available') }}</p>
                 </div>
             </div>
             {% endfor %}
-            <div class="merchant-card">
-                <div class="merchant-image">[Merchant Image]</div>
-                <h3 class="merchant-name">The Coffee House</h3>
-                <div class="merchant-rating">
-                    ★★★★☆ <span>4.2 (128 reviews)</span>
-                </div>
-                <div class="merchant-details">
-                    <p>123 Main Street, Richardson, TX</p>
-                    <p>0.3 miles away</p>
-                    <p>Open until 9:00 PM</p>
-                </div>
-            </div>
-
-            <div class="merchant-card">
-                <div class="merchant-image">[Merchant Image]</div>
-                <h3 class="merchant-name">Tech Galaxy</h3>
-                <div class="merchant-rating">
-                    ★★★★★ <span>4.8 (256 reviews)</span>
-                </div>
-                <div class="merchant-details">
-                    <p>456 Oak Avenue, Richardson, TX</p>
-                    <p>0.5 miles away</p>
-                    <p>Open until 8:00 PM</p>
-                </div>
-            </div>
-
-            <div class="merchant-card">
-                <div class="merchant-image">[Merchant Image]</div>
-                <h3 class="merchant-name">Fresh Market</h3>
-                <div class="merchant-rating">
-                    ★★★★☆ <span>4.4 (189 reviews)</span>
-                </div>
-                <div class="merchant-details">
-                    <p>789 Elm Street, Richardson, TX</p>
-                    <p>0.7 miles away</p>
-                    <p>Open until 10:00 PM</p>
-                </div>
-            </div>
         </div>
     </div>
+
+    <script>
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.merchant-card').forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        document.querySelectorAll('.merchant-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const lat = parseFloat(this.getAttribute('data-lat'));
+                const lng = parseFloat(this.getAttribute('data-lng'));
+                
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const position = { lat, lng };
+                    map.setCenter(position);
+                    map.setZoom(16);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,38 +1,88 @@
 async function initMap() {
-    const contentString = `
-      <div>
-        <h1>Uluru</h1>
-        <div>
-          <p>
-            <b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large
-            sandstone rock formation in the southern part of the
-            Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi)
-            south west of the nearest large town, Alice Springs; 450&#160;km
-            (280&#160;mi) by road. Kata Tjuta and Uluru are the two major
-            features of the Uluru - Kata Tjuta National Park. Uluru is
-            sacred to the Pitjantjatjara and Yankunytjatjara, the
-            Aboriginal people of the area. It has many springs, waterholes,
-            rock caves and ancient paintings. Uluru is listed as a World
-            Heritage Site.
-          </p>
-          <p>
-            Attribution: Uluru,
-            <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">
-              https://en.wikipedia.org/w/index.php?title=Uluru
-            </a>
-            (last visited June 22, 2009).
-          </p>
-        </div>
-      </div>`;
-    const infoWindow = new google.maps.InfoWindow({
-        content: contentString,
-        ariaLabel: "Uluru",
-    });
+  // Use the global variables defined in the HTML
+  const map = new google.maps.Map(document.querySelector('.map-placeholder'), {
+      center: { lat: CUSTOMER_LAT, lng: CUSTOMER_LNG },
+      zoom: 14,
+      mapId: 'DEMO_MAP_ID'
+  });
 
-    const marker = document.querySelector('gmp-advanced-marker');
-    marker.addEventListener('gmp-click', () => {
-        infoWindow.open({anchor: marker});
-    });
+  // Add customer marker (blue)
+  const customerMarker = new google.maps.Marker({
+      position: { lat: CUSTOMER_LAT, lng: CUSTOMER_LNG },
+      map: map,
+      icon: {
+          url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+          scaledSize: new google.maps.Size(40, 40)
+      },
+      title: 'Your Location',
+      zIndex: 1000
+  });
+
+  const customerInfo = new google.maps.InfoWindow({
+      content: `
+          <div style="color: #1a1a2e; padding: 10px;">
+              <strong>Your Location</strong><br>
+              ${CUSTOMER_ADDRESS}
+          </div>
+      `,
+      ariaLabel: "Your Location",
+  });
+
+  customerMarker.addListener('click', () => {
+      customerInfo.open({
+          anchor: customerMarker,
+          map
+      });
+  });
+
+  // Process merchant data
+  const merchants = JSON.parse(document.getElementById('merchant-data').textContent);
+  const bounds = new google.maps.LatLngBounds();
+  bounds.extend({ lat: CUSTOMER_LAT, lng: CUSTOMER_LNG });
+
+  merchants.forEach(merchant => {
+      const lat = parseFloat(merchant.latitude);
+      const lng = parseFloat(merchant.longitude);
+      
+      if (isNaN(lat) || isNaN(lng)) return;
+      
+      const position = { lat, lng };
+      
+      const marker = new google.maps.Marker({
+          position: position,
+          map: map,
+          icon: {
+              url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+              scaledSize: new google.maps.Size(35, 35)
+          },
+          title: merchant.name
+      });
+
+      const merchantInfo = new google.maps.InfoWindow({
+          content: `
+              <div style="color: #1a1a2e; padding: 10px;">
+                  <strong>${merchant.name}</strong><br>
+                  ${merchant.address}<br>
+                  ${merchant.stars ? `Rating: ${merchant.stars}<br>` : ''}
+                  ${merchant.business_hours || 'Hours not available'}
+              </div>
+          `
+      });
+
+      marker.addListener('click', () => {
+          merchantInfo.open({
+              anchor: marker,
+              map
+          });
+      });
+
+      bounds.extend(position);
+  });
+
+  // Fit map to show all markers
+  if (!bounds.isEmpty()) {
+      map.fitBounds(bounds, { padding: 50 });
+  }
 }
 
-  window.initMap = initMap;
+window.initMap = initMap;

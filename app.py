@@ -163,6 +163,12 @@ def merchant_signin():
 #     return render_template('dashboard.html', merchant=merchant_data)
 
 
+@app.route('/customer/customer-loans')
+def customer_loans():
+    return render_template(
+        'customer-loans.html'
+    )
+
 # sarvesh said remove everyting in between this end
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)
