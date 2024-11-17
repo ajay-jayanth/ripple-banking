@@ -7,6 +7,8 @@ import random
 from typing import Dict
 import string
 
+from maps_utils import address_to_coords
+
 
 CSV_PATH = os.path.join(os.getcwd(), 'customers.csv')
 
@@ -22,7 +24,7 @@ def ensure_csv_exists():
                 'customer_id', 'first_name', 'last_name', 'dob', 'ssn',
                 'email', 'phone', 'address', 'city', 'state',
                 'employment_status', 'employer', 'income', 'occupation',
-                'account_type', 'debit_card', 'password', 'created_at'
+                'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
             ]
             writer.writerow(headers)
 
@@ -48,6 +50,8 @@ def save_customer(data):
             data.get('accountType', ''),
             data.get('debitCard', ''),
             data.get('password', ''),
+            data.get('customer_lat', 0.0),
+            data.get('customer_long', 0.0),
             datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ]
         writer.writerow(row)
@@ -121,13 +125,17 @@ def customer_signup_fn():
                     return render_template('customer-signup.html', step=4)
                     
                 ensure_csv_exists()
+                address = f'{session["address"]}, {session["city"]}, {session["state"]}'
+                customer_lat, customer_long = address_to_coords(address)
+                session['customer_lat'] = customer_lat
+                session['customer_long'] = customer_long
                 customer_id = save_customer(session)
-                # address = f'{request.form["address"]}, {request.form["city"]}, {request.form["state"]} {request.form['zip_code']}'
                 customer_session({
                     'customer_id': customer_id,
-                    'first_name': request.form['firstName'],
-                    'last_name': request.form['lastName'],
-                    'email': request.form['email'],
+                    'first_name': session['firstName'],
+                    'last_name': session['lastName'],
+                    'email': session['email'],
+
                 })
                 return redirect(url_for('merchant_map'))
             
@@ -136,7 +144,7 @@ def customer_signup_fn():
             
         except Exception as e:
             print(f"Error: {str(e)}")
-            flash('An error occurred. Please try again.', 'error')
+            flash('An error occurred. Please try again. ' + e, 'error')
             return render_template('customer-signup.html', step=current_step)
 
     step = request.args.get('step')
