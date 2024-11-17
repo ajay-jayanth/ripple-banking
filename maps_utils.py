@@ -42,7 +42,9 @@ def get_merchants():
         lat, long = address_to_coords(address)
         if not lat:
             continue
-        rating = row.get('rating', 5.0)
+        rating = row['rating'] if not pd.isna(row['rating']) else 5.0
+        business_img = row['file'] if not pd.isna(row['file']) else 'images/default-business.jpg'
+        pfp = row['profile_pic'] if not pd.isna(row['profile_pic']) else 'images/default-pfp.jpg'
         stars = '★' * round(rating) + '☆' * (5 - round(rating))
         customer_lat = float(session.get('customer_lat'))
         customer_long = float(session.get('customer_long'))
@@ -55,7 +57,8 @@ def get_merchants():
             'rating': rating,
             'stars': stars,
             'distance': round(distance, 1),
-            'image_path': row['file'],
+            'business_img': business_img,
+            'image_path': pfp
         }
         merchant_list.append(merchant_info)
     return merchant_list

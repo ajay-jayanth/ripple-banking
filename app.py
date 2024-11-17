@@ -280,7 +280,6 @@ def customer_loans():
             session['loan_title'] = f'{new_application["purpose"]} Loan'
             session['amount'] = f'{loan_amount:,.2f}'
             session['monthly_payment'] = f'{loan_amount/12:,.2f}'
-            # session['']
 
             try:
                 df = pd.concat([df, pd.DataFrame([new_application])], ignore_index=True)
