@@ -134,27 +134,31 @@ body {
     border-radius: 4px;
 }
 
-.filters {
+.sort-buttons {
     display: flex;
-    gap: 1rem;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
     margin-bottom: 1rem;
 }
 
-.filter-btn {
-    background: rgba(78, 204, 163, 0.1);
-    border: 1px solid rgba(78, 204, 163, 0.3);
-    color: #4ecca3;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+/* Individual button styles remain unchanged */
+#sort-distance-button, #sort-rating-button {
+    background: #4ecca3;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.3s ease;
 }
 
-.filter-btn:hover {
-    background: rgba(78, 204, 163, 0.2);
+#sort-distance-button:hover, #sort-rating-button:hover {
+    background: #3db892;
 }
 
-.merchant-img {
+.merchant-image {
     overflow: hidden;
 }
 

@@ -43,11 +43,11 @@ async function initMap() {
   merchants.forEach(merchant => {
       const lat = parseFloat(merchant.latitude);
       const lng = parseFloat(merchant.longitude);
-      
+
       if (isNaN(lat) || isNaN(lng)) return;
-      
+
       const position = { lat, lng };
-      
+
       const marker = new google.maps.Marker({
           position: position,
           map: map,
@@ -83,6 +83,69 @@ async function initMap() {
   if (!bounds.isEmpty()) {
       map.fitBounds(bounds, { padding: 50 });
   }
+
+  const sortDistanceButton = document.getElementById('sort-distance-button');
+    const sortRatingButton = document.getElementById('sort-rating-button');
+    let sortAscending = true;
+
+    sortDistanceButton.addEventListener('click', () => {
+        // Sort the merchants array based on distance
+        merchants.sort((a, b) => {
+            return sortAscending ? a.distance - b.distance : b.distance - a.distance;
+        });
+    
+        // Get the parent element of the merchant cards
+        const merchantsList = document.querySelector('.merchants-list');
+    
+        // Create an array of merchant card elements
+        const merchantCards = Array.from(merchantsList.querySelectorAll('.merchant-card'));
+    
+        // Rearrange the cards based on the sorted merchants array
+        merchants.forEach(merchant => {
+            const card = merchantCards.find(
+                card => card.getAttribute('data-name') === merchant.name
+            );
+            if (card) {
+                merchantsList.appendChild(card); // Move the card to the end of the list
+            }
+        });
+    
+        // Toggle the sorting order
+        sortAscending = !sortAscending;
+    });
+    
+
+
+    sortRatingButton.addEventListener('click', () => {
+        // Sort the merchants array based on rating
+        merchants.sort((a, b) => {
+            if (sortAscending) {
+                return b.rating - a.rating;
+            } else {
+                return a.rating - b.rating;
+            }
+        });
+
+        // Get the parent element of the merchant cards
+        const merchantsList = document.querySelector('.merchants-list');
+    
+        // Create an array of merchant card elements
+        const merchantCards = Array.from(merchantsList.querySelectorAll('.merchant-card'));
+    
+        // Rearrange the cards based on the sorted merchants array
+        merchants.forEach(merchant => {
+            const card = merchantCards.find(
+                card => card.getAttribute('data-name') === merchant.name
+            );
+            if (card) {
+                merchantsList.appendChild(card); // Move the card to the end of the list
+            }
+        });
+    
+        // Toggle the sorting order
+        sortAscending = !sortAscending;
+    });
+
 }
 
 window.initMap = initMap;
