@@ -15,7 +15,7 @@
         </div>
         <div class="options">
             <!-- Loan Overview Card -->
-            <div class="option-card" onclick="window.location.href='/merchant/loans'" style="width: 600px;">
+            <div class="option-card" onclick="window.location.href='/loans'" style="width: 600px;">
                 <h2>Loan Overview</h2>
                 <div style="display: flex; justify-content: space-around; margin-bottom: 2rem;">
                     <div>
@@ -39,7 +39,7 @@
                 <h2>Potential Loan Applicatant</h2>
                 <div style="height: 400px; overflow-y: auto;">
                     {% for application in pending_applications %}
-                    <div class="application-item" onclick="showCustomerDetails('{{ application.customer_id }}')">
+                    <div class="application-item" onclick="window.location.href='/loan/{{ application.customer_id }}'">
                         <p class="name">{{ application.name }}</p>
                         <p>${{ "{:,.0f}".format(application.requested_amount) }} - {{ application.purpose }}</p>
                         <div class="risk-indicator risk-{{ 'good' if application.risk_score >= 75 else 'moderate' if application.risk_score >= 65 else 'poor' }}">
