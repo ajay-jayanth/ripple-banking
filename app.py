@@ -1,8 +1,12 @@
 from flask import Flask, render_template, jsonify,request, session, redirect, url_for, flash
 import pandas as pd
-
 from neil_util import format_currency, load_data,calculate_risk_indicators
-from auth_utils import customer_signin_fn, customer_signup_fn
+from auth_utils import (
+    customer_signin_fn, 
+    customer_signup_fn,
+    merchant_signup_fn,  
+    merchant_signin_fn   
+)
 from maps_utils import merchant_maps_fn
 from merchant import merchant_bp  # Import the merchant blueprint
 
@@ -110,5 +114,32 @@ def signout():
     flash('You have been signed out successfully.', 'success')
     return redirect(url_for('customer_signin'))
 
+
+@app.route('/merchant/signup', methods=['GET', 'POST'])
+def merchant_signup():
+    return merchant_signup_fn()
+
+@app.route('/merchant/signin', methods=['GET', 'POST'])
+def merchant_signin():
+    return merchant_signin_fn()
+
+# sarvesh said remove everyting in between this start
+@app.route('/merchant/dashboard')
+def merchant_dashboard():
+    # Check if merchant is logged in
+    if 'merchant_id' not in session:
+        flash('Please login first.', 'error')
+        return redirect(url_for('merchant_signin'))
+    
+    # Get merchant data from session
+    merchant_data = {
+        'merchant_id': session.get('merchant_id'),
+        'business_name': session.get('business_name'),
+        'email': session.get('email')
+    }
+    
+    return render_template('merchant-dashboard.html', merchant=merchant_data)
+
+# sarvesh said remove everyting in between this end
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)

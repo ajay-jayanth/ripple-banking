@@ -31,6 +31,20 @@
         </div>
 
         <div class="merchants-list">
+            {% for merchant in merchants %}
+            <div class="merchant-card">
+                <div class="merchant-image">[Merchant Image]</div>
+                <h3 class="merchant-name">{{ merchant['name'] }}</h3>
+                <div class="merchant-rating">
+                    {{merchant['stars']}} <span>{{merchant['rating']}} ({{merchant['reviews']}} reviews)</span>
+                </div>
+                <div class="merchant-details">
+                    <p>{{merchant['address']}}</p>
+                    <p>0.3 miles away</p>
+                    <p>Open until 9:00 PM</p>
+                </div>
+            </div>
+            {% endfor %}
             <div class="merchant-card">
                 <div class="merchant-image">[Merchant Image]</div>
                 <h3 class="merchant-name">The Coffee House</h3>
