@@ -10,7 +10,15 @@ def load_data():
     # Load CSV files
     loans_df = pd.read_csv('static/data/merchant_loans.csv')
     applications_df = pd.read_csv('static/data/customer_applications.csv')
+
+    # Get the customer IDs that are already in merchant loans
+    customer_ids_in_loans = loans_df['customer_id']
+
+    # Filter applications_df to exclude these customer IDs
+    applications_df = applications_df[~applications_df['customer_id'].isin(customer_ids_in_loans)]
+
     return loans_df, applications_df
+
 
 def calculate_risk_indicators(customer):
     # Calculate risk indicators (this could be expanded with more sophisticated logic)
