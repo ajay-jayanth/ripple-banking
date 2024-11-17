@@ -133,3 +133,27 @@ body {
     background: rgba(78, 204, 163, 0.3);
     border-radius: 4px;
 }
+
+.sort-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+    margin-bottom: 1rem;
+}
+
+/* Individual button styles remain unchanged */
+#sort-distance-button, #sort-rating-button {
+    background: #4ecca3;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#sort-distance-button:hover, #sort-rating-button:hover {
+    background: #3db892;
+}

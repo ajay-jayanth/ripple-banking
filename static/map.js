@@ -43,11 +43,11 @@ async function initMap() {
   merchants.forEach(merchant => {
       const lat = parseFloat(merchant.latitude);
       const lng = parseFloat(merchant.longitude);
-      
+
       if (isNaN(lat) || isNaN(lng)) return;
-      
+
       const position = { lat, lng };
-      
+
       const marker = new google.maps.Marker({
           position: position,
           map: map,
@@ -83,6 +83,90 @@ async function initMap() {
   if (!bounds.isEmpty()) {
       map.fitBounds(bounds, { padding: 50 });
   }
+
+  const sortDistanceButton = document.getElementById('sort-distance-button');
+    const sortRatingButton = document.getElementById('sort-rating-button');
+    let sortAscending = true;
+
+    sortDistanceButton.addEventListener('click', () => {
+      // Sort the merchants array based on distance
+      merchants.sort((a, b) => {
+          if (sortAscending) {
+              return a.distance - b.distance;
+          } else {
+              return b.distance - a.distance;
+          }
+      });
+
+      // Clear existing merchant cards
+      const merchantsList = document.querySelector('.merchants-list');
+      const merchantCards = merchantsList.querySelectorAll('.merchant-card');
+      merchantCards.forEach(card => card.remove());
+
+      // Re-generate merchant cards in sorted order
+      merchants.forEach(merchant => {
+          const merchantCard = document.createElement('div');
+          merchantCard.classList.add('merchant-card');
+          merchantCard.setAttribute('data-lat', merchant.latitude);
+          merchantCard.setAttribute('data-lng', merchant.longitude);
+          merchantCard.setAttribute('data-name', merchant.name);
+          merchantCard.innerHTML = `
+              <div class="merchant-image">[Merchant Image]</div>
+              <h3 class="merchant-name">${merchant.name}</h3>
+              <div class="merchant-rating">${merchant.stars} (${merchant.reviews} reviews)</div>
+              <div class="merchant-details">
+                  ${merchant.address}<br>
+                  ${merchant.distance} miles away<br>
+                  ${merchant.business_hours || 'Hours not available'}
+              </div>
+          `;
+          merchantsList.appendChild(merchantCard);
+      });
+
+      // Toggle the sorting order
+      sortAscending = !sortAscending;
+  });
+
+
+    sortRatingButton.addEventListener('click', () => {
+        // Sort the merchants array based on rating
+        merchants.sort((a, b) => {
+            if (sortAscending) {
+                return b.rating - a.rating;
+            } else {
+                return a.rating - b.rating;
+            }
+        });
+
+        // Clear existing merchant cards
+        const merchantsList = document.querySelector('.merchants-list');
+        const merchantCards = merchantsList.querySelectorAll('.merchant-card');
+        merchantCards.forEach(card => card.remove());
+
+        // Re-generate merchant cards in sorted order
+        merchants.forEach(merchant => {
+            const merchantCard = document.createElement('div');
+            merchantCard.classList.add('merchant-card');
+            merchantCard.setAttribute('data-lat', merchant.latitude);
+            merchantCard.setAttribute('data-lng', merchant.longitude);
+            merchantCard.setAttribute('data-name', merchant.name);
+            merchantCard.innerHTML = `
+                <div class="merchant-image">[Merchant Image]</div>
+                <h3 class="merchant-name">${merchant.name}</h3>
+                <div class="merchant-rating">${merchant.stars} (${merchant.reviews} reviews)</div>
+                <div class="merchant-details">
+                    ${merchant.address}<br>
+                    ${merchant.distance} miles away<br>
+                    ${merchant.business_hours || 'Hours not available'}
+                </div>
+            `;
+            merchantsList.appendChild(merchantCard);
+        });
+
+        // Toggle the sorting order
+        sortAscending = !sortAscending;
+    });
+
 }
 
 window.initMap = initMap;

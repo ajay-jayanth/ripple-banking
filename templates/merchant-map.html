@@ -19,36 +19,36 @@
         <div class="logo">Ripple Banking</div>
         <input type="text" class="search-bar" placeholder="Search merchants...">
     </nav>
-
     <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
-
     <div class="main-container">
         <div class="map-container">
             <div class="map-placeholder"></div>
         </div>
-
         <div class="merchants-list">
+            <div class="sort-buttons">
+                <button id="sort-distance-button">Sort by Distance</button>
+                <button id="sort-rating-button">Sort by Rating</button>
+            </div>
             {% for merchant in merchants %}
-            <div class="merchant-card" 
-                 data-lat="{{ merchant.latitude }}" 
+            <div class="merchant-card"
+                 data-lat="{{ merchant.latitude }}"
                  data-lng="{{ merchant.longitude }}"
                  data-name="{{ merchant.name }}">
                 <div class="merchant-image">[Merchant Image]</div>
                 <h3 class="merchant-name">{{ merchant.name }}</h3>
                 <div class="merchant-rating">
-                    {{ merchant.stars }} 
+                    {{ merchant.stars }}
                     <span>{{ merchant.rating }} ({{ merchant.reviews }} reviews)</span>
                 </div>
                 <div class="merchant-details">
                     {{ merchant.address }}<br>
-                    {{ merchant.distance }} miles away<br>
+                    {{ "%.1f"|format(merchant.distance|default(0)|float) }} miles away<br>
                     {{ merchant.business_hours or 'Hours not available' }}
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-
     <script>
         document.querySelector('.search-bar').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
@@ -62,7 +62,6 @@
             card.addEventListener('click', function() {
                 const lat = parseFloat(this.getAttribute('data-lat'));
                 const lng = parseFloat(this.getAttribute('data-lng'));
-                
                 if (!isNaN(lat) && !isNaN(lng)) {
                     const position = { lat, lng };
                     map.setCenter(position);
