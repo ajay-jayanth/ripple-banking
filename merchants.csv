@@ -1,4 +1,11 @@
 merchant_id,business_name,business_type,ein,years_in_business,email,phone,website,first_name,last_name,address,city,state,zip_code,business_hours,password,security_question,security_answer,created_at,bank_name,account_number,routing_number,monthly_revenue
+<<<<<<< HEAD
+MC26294240,Coffee Waves Port Aransas,restaurant,2,2,coffeewaves@gmail.com,3617490825,https://www.coffeewaves.com/,Yeshas,Nath,1007 TX-361,Port Aransas,TX,78373,7:00am-9:00pm,1234,mother_maiden,2,2024-11-16 20:30:07,,,,
+MC49992095,Family Center IGA Food Store,store,1231231,5,FCIGAFS@gmail.com,3617496233,http://www.familycenteriga.com/,Ajay,Jayanth,418 S Alister St,Port Aransas,TX,78373,9:00am-5:00pm,123,mother_maiden,Momma,2024-11-16 20:52:28,,,,
+MC44213423,Dollar General,store,43634,8,dollargeneral@gmail.com,3612268710,https://www.dollargeneral.com/store-directory/tx/port-aransas/19805,Sarvesh,Sathish,1815 TX-361,Port Aransas,TX,78373,8:00am-10:00pm,12345,mother_maiden,Momma,2020-11-10 20:52:28,,,,
+MC96830285,Castaway’s Seafood & Grill,restaurant,9532,10,castaway@gmail.com,3617495394,https://castawaysporta.com/,Neil,Agrawal,337 N Alister St,Port Aransas,TX,78373,9:00am–9:00pm,1234567,mother_maiden,Momma,2022-01-12 12:00:28,,,,
+=======
 MC26294240,2,retail,2,2,2@2.com,2222222222,,2,2,2,2,AL,22222,2,2,mother_maiden,2,2024-11-16 20:30:07,,,,
 MC49992095,lol,service,1231231,123,kunhu2004@gmail.com,6822274860,,Ajay,Jayanth,6732 Prospect Way,Irving,TX,75063,9:00am-5:00pm,123,mother_maiden,Momma,2024-11-16 20:52:28,,,,
 MC32299513,GUNDA CORP,retail,1231231,12,risheel.gunda@gmail.com,1231231234,,Risheel,Gunda,9300 Coit Rd,Plano,TX,75025,12,123,mother_maiden,Mommamom,2024-11-16 21:31:39,,,,
+>>>>>>> ajay

@@ -108,7 +108,12 @@ def verify_customer(email, password):
                     'customer_id': row['customer_id'],
                     'first_name': row['first_name'],
                     'last_name': row['last_name'],
-                    'email': row['email']
+                    'email': row['email'],
+                    'customer_lat': row['latitude'],
+                    'customer_long': row['longitude'],
+                    'address': row['address'],
+                    'city': row['city'],
+                    'state': row['state']
                 }
     return None
 
@@ -136,6 +141,7 @@ def customer_signup_fn():
                 session['customer_lat'] = customer_lat
                 session['customer_long'] = customer_long
                 address = f'{session["address"]}, {session["city"]}, {session["state"]}'
+                session['address_combined'] = address
                 customer_lat, customer_long = address_to_coords(address)
                 session['customer_lat'] = customer_lat
                 session['customer_long'] = customer_long
@@ -180,6 +186,7 @@ def customer_signin_fn():
         if customer:
             # Store all necessary customer data in session
             customer_session(customer)
+            session['address_combined'] = f'{session["address"]}, {session["city"]}, {session["state"]}'
             return redirect(url_for('merchant_map'))
         else:
             flash('Invalid email or password.', 'error')
@@ -322,7 +329,7 @@ def merchant_signin_fn():
             session['merchant_id'] = str(merchant['merchant_id'])
             session['business_name'] = str(merchant['business_name'])
             session['email'] = str(merchant['email'])
-            return redirect(url_for('merchant_dashboard'))
+            return redirect(url_for('dashboard'))
         else:
             print("DEBUG: Login failed - invalid credentials")
             flash('Invalid email or password.', 'error')
@@ -450,4 +457,3 @@ def merchant_signup_fn():
 
     step = int(request.args.get('step', 1))
     return render_template('merchant-signup.html', step=step, form_data=session.get('merchant_data', {}))
-
