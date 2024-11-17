@@ -143,13 +143,13 @@
         </div>
 
         <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                 <div class="flash-message {{ category }}">{{ message }}</div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
+            {% endif %} -->
+        <!-- {% endwith %} -->
 
         <!-- Login Form -->
         <form method="POST" action="{{ url_for('merchant_signin') }}">
