@@ -44,7 +44,9 @@
                  data-lat="{{ merchant.latitude }}" 
                  data-lng="{{ merchant.longitude }}"
                  data-name="{{ merchant.name }}">
-                <div class="merchant-image">[Merchant Image]</div>
+                <div class="merchant-image">
+                    <img src="{{ url_for('static', filename=merchant['image_path']) }}">
+                </div>
                 <h3 class="merchant-name">{{ merchant.name }}</h3>
                 <div class="merchant-rating">
                     {{ merchant.stars }} 
