@@ -1,8 +1,12 @@
 async function initMap() {
-  const map = new google.maps.Map(document.querySelector('.map-placeholder'), {
+    const {ColorScheme} = await google.maps.importLibrary("core")
+
+  
+    const map = new google.maps.Map(document.querySelector('.map-placeholder'), {
       center: { lat: CUSTOMER_LAT, lng: CUSTOMER_LNG },
       zoom: 14,
-      mapId: 'DEMO_MAP_ID'
+      mapId: 'DEMO_MAP_ID',
+      colorScheme: ColorScheme.DARK,
   });
 
   function createRippleEffect(position) {
@@ -201,7 +205,7 @@ async function initMap() {
           position: position,
           map: map,
           icon: {
-              url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+              url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
               scaledSize: new google.maps.Size(60, 60)
           },
           title: merchant.name
