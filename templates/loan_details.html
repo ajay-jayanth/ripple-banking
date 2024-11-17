@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_dashboard.css') }}">
+    <style>
+        .details-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+        }
+        .details-header {
+            color: #4ecca3;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .details-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .details-item .label {
+            display: block;
+            font-size: 0.9rem;
+            color: #a8a8a8;
+            margin-bottom: 0.5rem;
+        }
+        .details-item .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .value.red {
+            color: #dc3545; /* Red */
+        }
+        .value.yellow {
+            color: #ffc107; /* Yellow */
+        }
+        .value.green {
+            color: #28a745; /* Green */
+        }
+        .back-button {
+            display: block;
+            margin: 2rem auto 0;
+            background: #4ecca3;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            color: #1a1a2e;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            width: 200px;
+            transition: background 0.3s ease;
+        }
+        .back-button:hover {
+            background: #3db892;
+        }
+
+        @media (max-width: 768px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="details-container">
+        <h1 class="details-header">Loan Application Details</h1>
+        <div class="details-grid">
+            <div class="details-item">
+                <span class="label">Name</span>
+                <span class="value" style = "color:#ffffff">{{ customer['name'] }}</span>
+            </div>
+            <div class="details-item">
+                <span class="label">Credit Score</span>
+                <span class="value {{ 'green' if customer['credit_score'] >= 750 else 'yellow' if customer['credit_score'] >= 600 else 'red' }}">
+                    {{ customer['credit_score'] }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Monthly Income</span>
+                <span class="value {{ 'green' if customer['monthly_income'] >= 5000 else 'yellow' if customer['monthly_income'] >= 3000 else 'red' }}">
+                    ${{ "{:,.2f}".format(customer['monthly_income']) }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Requested Amount</span>
+                <span class="value {{ 'green' if customer['requested_amount'] <= 5000 else 'yellow' if customer['requested_amount'] <= 10000 else 'red' }}">
+                    ${{ "{:,.2f}".format(customer['requested_amount']) }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Purpose</span>
+                <span class="value" style = "color:#ffffff">{{ customer['purpose'] }}</span>
+            </div>
+            <div class="details-item">
+                <span class="label">Application Date</span>
+                <span class="value" style = "color:#ffffff">{{ customer['application_date'] }}</span>
+            </div>
+            <div class="details-item">
+                <span class="label">Risk Score</span>
+                <span class="value {{ 'green' if customer['risk_score'] >= 75 else 'yellow' if customer['risk_score'] >= 50 else 'red' }}">
+                    {{ "{:,.2f}".format(customer['risk_score']) }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">DTI Ratio</span>
+                <span class="value {{ 'green' if customer['dti_ratio'] <= 30 else 'yellow' if customer['dti_ratio'] <= 50 else 'red' }}">
+                    {{ "{:.2f}".format(customer['dti_ratio']) }}%
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">LTI Ratio</span>
+                <span class="value {{ 'green' if customer['lti_ratio'] <= 20 else 'yellow' if customer['lti_ratio'] <= 40 else 'red' }}">
+                    {{ "{:.2f}".format(customer['lti_ratio']) }}%
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Payment History Score</span>
+                <span class="value {{ 'green' if customer['payment_history_score'] >= 90 else 'yellow' if customer['payment_history_score'] >= 70 else 'red' }}">
+                    {{ customer['payment_history_score'] }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Credit History Years</span>
+                <span class="value {{ 'green' if customer['credit_history_years'] >= 10 else 'yellow' if customer['credit_history_years'] >= 5 else 'red' }}">
+                    {{ customer['credit_history_years'] }}
+                </span>
+            </div>
+            <div class="details-item">
+                <span class="label">Savings and Assets</span>
+                <span class="value {{ 'green' if customer['savings_and_assets'] >= 10000 else 'yellow' if customer['savings_and_assets'] >= 5000 else 'red' }}">
+                    ${{ "{:,.2f}".format(customer['savings_and_assets']) }}
+                </span>
+            </div>
+        </div>
+        <a href="#" class="back-button" onclick="window.history.back()">Back</a>
+    </div>
+</body>
+</html>
