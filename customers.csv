@@ -1,6 +1,4 @@
-customer_id,first_name,last_name,dob,ssn,email,phone,address,city,state,employment_status,employer,income,occupation,account_type,debit_card,password,customer_lat,customer_long,created_at
-RB18349783,Ajay,Jayanth,2004-02-08,123456789,a@a.com,1234567891,6732 Prospect Way,Irving,TX,self-employed,asd,123,12,savings,yes,123,32.8999702,-96.9849067,2024-11-16 19:41:43
-RB48656453,Ajay,Jayanth,2004-02-08,123456789,kunhu2004@gmail.com,1234567891,9300 Coit Rd,Plano,TX,self-employed,asd,123,12,savings,yes,123,33.105289,-96.76848269999999,2024-11-16 19:43:32
-RB88207627,Ajay,Jayanth,2004-02-08,123456789,kunhu2004@gmail.com,1234567891,9300 Coit Rd,Plano,TX,self-employed,asd,123,12,savings,yes,123,33.105289,-96.76848269999999,2024-11-16 19:44:14
-RB13179463,Ajay,Jayanth,2004-02-08,123456789,kunhu2004@gmail.com,1234567891,9300 Coit Rd,Plano,TX,self-employed,asd,123,12,savings,yes,123,33.105289,-96.76848269999999,2024-11-16 19:45:17
-RB42042035,Ajay,Jayanth,2004-02-08,123456789,a@c.com,1234567891,9300 Coit Rd,Plano,TX,self-employed,asd,123,12,savings,yes,123,33.105289,-96.76848269999999,2024-11-16 19:45:52
+customer_id,first_name,last_name,dob,ssn,email,phone,address,city,state,employment_status,employer,income,occupation,account_type,debit_card,password,created_at
+RB84992258,2,2,2024-11-08,123123123,a@gmail.com,2131231231,2,2,NY,unemployed,2,2,2,savings,no,2,2024-11-16 17:07:00
+RB71754189,yesh,nath,2024-11-01,123123123,yesh@gmail.com,1231231234,123,12,VA,self-employed,2,2,2,savings,no,2,2024-11-16 17:15:04
+RB01787506,Ajay,Jayanth,2004-02-08,112312311,a@s.com,1111222333,744 Brick Row,Richardson,TX,self-employed,jknsdkalc,1230,dev,savings,yes,123,2024-11-16 17:31:09

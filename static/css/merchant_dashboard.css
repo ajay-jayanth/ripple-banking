@@ -1,0 +1,288 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.logo {
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-in;
+}
+
+.bank-loan-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    width: 100% !important;
+    max-width: 1000px !important;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.loan-details-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Ensure the row spans the full width */
+    gap: 2rem; /* Add space between sections */
+}
+
+.loan-detail {
+    flex: 1; /* Equal space for all details */
+    text-align: center; /* Center-align the text */
+}
+
+
+.risk-indicator {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+.risk-good {
+    background-color: rgba(46, 213, 115, 0.2);
+    color: #2ed573;
+}
+.risk-moderate {
+    background-color: rgba(255, 171, 0, 0.2);
+    color: #ffab00;
+}
+.risk-poor {
+    background-color: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+}
+.application-item {
+    background: rgba(255,255,255,0.05);
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.application-item p {
+    margin: 2px 0;
+    line-height: 1.2;
+}
+.application-item .name {
+    color: #4ecca3;
+    font-weight: 500;
+}
+
+.logo h1 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    color: #4ecca3;
+}
+
+.logo p {
+    font-size: 1.2rem;
+    color: #a8a8a8;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.option-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 300px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.option-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.option-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #4ecca3;
+}
+
+.option-card p {
+    color: #d1d1d1;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.loan-details {
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.loan-stat {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.loan-stat .label {
+    display: block;
+    color: #a8a8a8;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.loan-stat .value {
+    display: block;
+    color: #4ecca3;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.progress-container {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: #4ecca3;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    color: #4ecca3;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.application-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease;
+}
+
+.application-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.risk-indicator {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.risk-good {
+    background: rgba(78, 204, 163, 0.2);
+    color: #4ecca3;
+}
+
+.risk-moderate {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.risk-poor {
+    background: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+}
+
+button {
+    background: #4ecca3;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #3db892;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#customerModal {
+    background: rgba(26, 26, 46, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    z-index: 1000;
+    min-width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .loan-details {
+        flex-direction: column;
+    }
+    
+    .loan-stat {
+        width: 100%;
+    }
+    
+    .logo h1 {
+        font-size: 2.5rem;
+    }
+    
+    .option-card {
+        width: 100%;
+    }
+}
