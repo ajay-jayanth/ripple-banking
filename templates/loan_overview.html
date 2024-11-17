@@ -17,57 +17,8 @@
     </div>
 
     <script>
-        // Combined data with customer information
-        const customers = [
-            {customer_id: 1, name: "John Smith", purpose: "Business Expansion"},
-            {customer_id: 2, name: "Sarah Johnson", purpose: "Education"},
-            {customer_id: 3, name: "Michael Brown", purpose: "Home Improvement"},
-            {customer_id: 4, name: "Emily Davis", purpose: "Debt Consolidation"},
-            {customer_id: 5, name: "David Wilson", purpose: "Small Business"}
-        ];
-
-        const loans = [
-            {
-                merchant_id: 'M001',
-                customer_id: 1,
-                loan_amount: 5000,
-                remaining_amount: 3500,
-                start_date: '2024-01-15',
-                status: 'active'
-            },
-            {
-                merchant_id: 'M001',
-                customer_id: 2,
-                loan_amount: 3000,
-                remaining_amount: 2800,
-                start_date: '2024-02-01',
-                status: 'active'
-            },
-            {
-                merchant_id: 'M001',
-                customer_id: 3,
-                loan_amount: 2000,
-                remaining_amount: 0,
-                start_date: '2023-12-01',
-                status: 'completed'
-            },
-            {
-                merchant_id: 'M001',
-                customer_id: 4,
-                loan_amount: 4000,
-                remaining_amount: 3800,
-                start_date: '2024-03-01',
-                status: 'active'
-            },
-            {
-                merchant_id: 'M001',
-                customer_id: 5,
-                loan_amount: 6000,
-                remaining_amount: 5500,
-                start_date: '2024-03-10',
-                status: 'active'
-            }
-        ];
+        // Dynamic data injected from Flask
+        const flaskLoans = {{ loans|tojson }};
 
         function formatCurrency(amount) {
             return new Intl.NumberFormat('en-US', {
@@ -87,17 +38,16 @@
         function createLoanCards() {
             const container = document.getElementById('loans-container');
             
-            loans.forEach(loan => {
-                const customer = customers.find(c => c.customer_id === loan.customer_id);
+            flaskLoans.forEach(loan => {
                 const progress = ((loan.loan_amount - loan.remaining_amount) / loan.loan_amount) * 100;
-                
+
                 const card = document.createElement('div');
                 card.className = 'loan-card';
                 card.innerHTML = `
                     <div class="loan-header">
                         <div>
-                            <h2 class="loan-title">${customer.name}</h2>
-                            <div class="customer-purpose">${customer.purpose}</div>
+                            <h2 class="loan-title">${loan.name}</h2>
+                            <div class="customer-purpose">${loan.purpose}</div>
                         </div>
                         <span class="loan-status status-${loan.status}">${loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}</span>
                     </div>
