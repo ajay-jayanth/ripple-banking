@@ -143,9 +143,9 @@ def merchant_signup():
 def merchant_signin():
     return merchant_signin_fn()
 
-@app.route('/customer/request-loan')
+@app.route('/customer/loan-application')
 def request_loan_page():
-    return render_template('')
+    return render_template('loan-application.html')
 
 # sarvesh said remove everyting in between this start
 
