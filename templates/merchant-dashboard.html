@@ -95,5 +95,258 @@
             </form>
         </div>
     </div>
+    <!-- Add this to your HTML right after the dashboard-container -->
+    <div class="celebration-container">
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+      </div>
+      
+      <div class="modal-overlay">
+        <div class="success-modal">
+          <div class="modal-content">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" width="50" height="50">
+                <path fill="none" stroke="#4ecca3" stroke-width="2" 
+                      d="M1 14 L9 20 L23 4" class="checkmark"/>
+              </svg>
+            </div>
+            <h2>Thank You For Investing in Your Community!</h2>
+            <p>Your loan application has been successfully submitted. The bank will review your application and contact you shortly.  <strong>Based on past data in your area this loan could help 7 people acheive their financial goals.</strong></p>
+            </div>
+            <form id="submit-loan-form" action="{{ url_for('merchant.submit_loan') }}" method="POST">
+              <input type="hidden" name="bank" id="hidden-bank">
+              <input type="hidden" name="amount" id="hidden-amount">
+              <button type="submit" class="close-modal">Close</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+  <style>
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(26, 26, 46, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .success-modal {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 2px solid #4ecca3;
+    border-radius: 15px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .modal-overlay.show .success-modal {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .modal-content {
+    text-align: center;
+  }
+  
+  .success-icon {
+    margin: 0 auto 1.5rem;
+    width: 80px;
+    height: 80px;
+    background: rgba(78, 204, 163, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .checkmark {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: drawCheck 0.8s ease forwards 0.3s;
+  }
+  
+  .success-modal h2 {
+    color: #4ecca3;
+    margin: 0 0 1rem;
+    font-size: 1.8rem;
+  }
+  
+  .success-modal p {
+    color: #d1d1d1;
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .application-details {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: left;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+  }
+  
+  .detail-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detail-label {
+    color: #4ecca3;
+    font-size: 0.9rem;
+  }
+  
+  .detail-value {
+    color: #ffffff;
+    font-weight: 500;
+  }
+  
+  .close-modal {
+    background: #4ecca3;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    color: #1a1a2e;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  
+  .close-modal:hover {
+    background: #3db892;
+    transform: translateY(-2px);
+  }
+  
+  /* Confetti Animation */
+  .celebration-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .celebration-container.show {
+    opacity: 1;
+  }
+  
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 30px;
+    background: #4ecca3;
+    top: -10px;
+    opacity: 0;
+  }
+  
+  .confetti-piece:nth-child(1) { left: 10%; animation: confetti 3s ease-in-out infinite; animation-delay: 0.1s; }
+  .confetti-piece:nth-child(2) { left: 20%; animation: confetti 3.2s ease-in-out infinite; animation-delay: 0.3s; }
+  .confetti-piece:nth-child(3) { left: 30%; animation: confetti 2.8s ease-in-out infinite; animation-delay: 0.5s; }
+  .confetti-piece:nth-child(4) { left: 40%; animation: confetti 3.5s ease-in-out infinite; animation-delay: 0.2s; }
+  .confetti-piece:nth-child(5) { left: 50%; animation: confetti 3s ease-in-out infinite; animation-delay: 0.4s; }
+  .confetti-piece:nth-child(6) { left: 60%; animation: confetti 3.3s ease-in-out infinite; animation-delay: 0.6s; }
+  .confetti-piece:nth-child(7) { left: 70%; animation: confetti 2.9s ease-in-out infinite; animation-delay: 0.3s; }
+  .confetti-piece:nth-child(8) { left: 80%; animation: confetti 3.4s ease-in-out infinite; animation-delay: 0.1s; }
+  .confetti-piece:nth-child(9) { left: 90%; animation: confetti 3.1s ease-in-out infinite; animation-delay: 0.5s; }
+  .confetti-piece:nth-child(10) { left: 95%; animation: confetti 3s ease-in-out infinite; animation-delay: 0.2s; }
+  
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+  
+  @keyframes drawCheck {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  </style>
+  
+  <script>
+    document.querySelector('button[type="submit"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const bankElement = document.querySelector('input[name="bank"]:checked');
+      const amountElement = document.querySelector('#loan-amount');
+      
+      if (!bankElement || !amountElement || !amountElement.value) {
+        alert('Please fill in all required fields');
+        return;
+      }
+    
+      // Set hidden form values
+      document.querySelector('#hidden-bank').value = bankElement.value;
+      document.querySelector('#hidden-amount').value = amountElement.value;
+      
+      // Show celebration
+      const celebration = document.querySelector('.celebration-container');
+      celebration.classList.add('show');
+      
+      // Show modal
+      const modal = document.querySelector('.modal-overlay');
+      modal.classList.add('show');
+      
+      // Remove celebration after animation
+      setTimeout(() => {
+        celebration.classList.remove('show');
+      }, 3000);
+    });
+    
+    // Close modal and submit form
+    document.querySelector('.close-modal').addEventListener('click', function(e) {
+      e.preventDefault();
+      const modal = document.querySelector('.modal-overlay');
+      modal.classList.remove('show');
+      
+      // Submit the form to Flask endpoint
+      document.getElementById('submit-loan-form').submit();
+    });
+    
+    // Close modal when clicking outside and submit form
+    document.querySelector('.modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('show');
+        document.getElementById('submit-loan-form').submit();
+      }
+    });
+    </script>
 </body>
 </html>
