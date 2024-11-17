@@ -1,35 +1,40 @@
-SAMPLE_LOANS = [
-    {
-        "bank": "Goldman Sachs",
-        "status": "current",  # Loan status is 'current'
-        "date": "2024-03-15",
-        "amount": "$30,000"
-    },
-    {
-        "bank": "Bank of America",
-        "status": "rejected",  # Loan status is 'rejected'
-        "date": "2024-02-01",
-        "amount": "$75,000"
-    },
-    {
-        "bank": "Chase",
-        "status": "paid",  # Loan status is 'current'
-        "date": "2024-03-20",
-        "amount": "$10,000"
-    },
-    {
-        "bank": "Citi",
-        "status": "paid",  # Changed from 'paid_off' to 'paid'
-        "date": "2023-12-31",
-        "amount": "$25,000"
-    }
-]
+import csv
 
 
-BANKS = [
-    "Goldman Sachs",
-    "Bank of America",
-    "Capital One",
-    "Chase",
-    "Citi"
-]
+import csv
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def format_currency(amount):
+    """Format the amount as currency, e.g., $30,000"""
+    return f"${amount:,.0f}"  # This will format the amount with commas for thousands
+
+
+def read_loans():
+    """Read loan data from loans.csv"""
+    loans = []
+    loans_file_path = os.path.join(
+        BASE_DIR, '..', 'static', 'data', 'loans.csv')  # Create absolute path
+    with open(loans_file_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            loans.append({
+                "bank": row['bank'],
+                "status": row['status'],
+                "date": row['date'],
+                # Format the amount as currency
+                "amount": format_currency(int(row['amount']))
+            })
+    return loans
+
+
+def read_banks():
+    """Read bank data from banks.csv"""
+    banks = []
+    with open('static/data/banks.csv', mode='r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            banks.append(row[0])  # Only one column in this file
+    return banks

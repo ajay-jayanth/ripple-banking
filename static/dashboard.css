@@ -292,3 +292,52 @@ button[type="submit"]:hover {
   margin-right: 8px;
   color: #155724;
 }
+
+/* New Loan Amount Input Field */
+.form-group input[type="number"] {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.form-group input[type="number"]:focus {
+  border-color: #4ecca3;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.form-group label {
+  color: #d1d1d1;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Optional styling for loan amount input */
+.form-group input[type="number"]::placeholder {
+  color: #b0b0b0;
+}
+
+/* Add styles for submit button (if needed to adjust spacing) */
+button[type="submit"] {
+  background: #4ecca3;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  color: #1a1a2e;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+button[type="submit"]:hover {
+  background: #3db892;
+}

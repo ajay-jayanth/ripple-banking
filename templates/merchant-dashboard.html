@@ -48,7 +48,7 @@
       <div class="new-loan">
         <h2>New Loan Application</h2>
         <form
-          action="window.location.href='/merchant/merchant-dashboard'"
+          action="{{ url_for('merchant.submit_loan') }}"
           method="post"
           class="loan-form"
         >
@@ -64,6 +64,20 @@
               {% endfor %}
             </div>
           </div>
+
+          <!-- New Input for Loan Amount -->
+          <div class="form-group">
+            <label for="loan-amount">Loan Amount:</label>
+            <input
+              type="number"
+              id="loan-amount"
+              name="amount"
+              placeholder="Enter loan amount"
+              required
+              min="1000"
+            />
+          </div>
+
           <button type="submit">Submit Application</button>
         </form>
       </div>
