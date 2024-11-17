@@ -1,8 +1,12 @@
 from flask import Flask, render_template, jsonify
 import pandas as pd
 from neil_util import format_currency, load_data,calculate_risk_indicators
+from merchant import merchant_bp  # Import the merchant blueprint
+
 
 app = Flask(__name__)
+
+app.register_blueprint(merchant_bp, url_prefix='/merchant')
 
 @app.route('/loans')
 def loan_overview():
