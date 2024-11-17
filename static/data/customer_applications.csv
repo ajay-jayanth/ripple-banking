@@ -1,0 +1,11 @@
+customer_id,name,credit_score,monthly_income,requested_amount,purpose,application_date,status,risk_score
+1,John Smith,720,4500,3000,Business Expansion,2024-03-15,pending,75
+2,Sarah Johnson,680,3800,2500,Education,2024-03-14,pending,68
+3,Michael Brown,700,5000,4000,Home Improvement,2024-03-16,pending,72
+4,Emily Davis,750,6000,5000,Debt Consolidation,2024-03-15,pending,78
+5,David Wilson,690,4200,3500,Small Business,2024-03-16,pending,70
+6,Lisa Anderson,710,5500,4500,Medical Expenses,2024-03-15,pending,73
+7,James Taylor,670,3500,2000,Car Repair,2024-03-14,pending,65
+8,Maria Garcia,730,4800,3800,Home Renovation,2024-03-16,pending,76
+9,Robert Martin,695,4100,3000,Wedding Expenses,2024-03-15,pending,69
+10,Jennifer White,715,5200,4200,Business Inventory,2024-03-16,pending,74

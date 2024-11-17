@@ -1,0 +1,5 @@
+bank,status,date,amount
+Goldman Sachs,current,2024-03-15,30000
+Bank of America,rejected,2024-02-01,75000
+Chase,paid,2024-03-20,10000
+Citi,paid,2023-12-31,25000

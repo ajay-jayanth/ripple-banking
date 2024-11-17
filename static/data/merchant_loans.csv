@@ -1,0 +1,6 @@
+merchant_id,customer_id,loan_amount,remaining_amount,start_date,status
+M001,1,5000,3500,2024-01-15,active
+M001,2,3000,2800,2024-02-01,active
+M001,3,2000,0,2023-12-01,completed
+M001,4,4000,3800,2024-03-01,active
+M001,5,6000,5500,2024-03-10,active
