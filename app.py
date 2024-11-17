@@ -9,6 +9,8 @@ from auth_utils import (
 )
 from maps_utils import merchant_maps_fn
 from merchant import merchant_bp  # Import the merchant blueprint
+import random
+import datetime
 
 
 app = Flask(__name__)
@@ -158,7 +160,106 @@ def merchant_signin():
 
 @app.route('/customer/loan-application')
 def request_loan_page():
-    return render_template('loan-application.html')
+    df = pd.read_csv('merchants.csv').set_index('first_name')
+    row = df.loc[session['merchant_name'].split()[0]]
+    return render_template(
+        'loan-application.html',
+        merchant_name=session['merchant_name'],
+        merchant_id=session['merchant_id'],
+        business_name=session['business_name'],
+        email=session['email'],
+        rating=str(session['rating']),
+        risk_score=str(session['risk_score']),
+        image_path=row['file']
+    )
+
+@app.route('/save-merchant-session', methods=['POST'])
+def save_merchant_session():
+    data = request.json
+    session['merchant_name'] = data['name']
+    df = pd.read_csv('merchants.csv').set_index('first_name')
+    row = df.loc[session['merchant_name'].split()[0]]
+    session['merchant_id'] = row['merchant_id']
+    session['business_name'] = row['business_name']
+    session['email'] = row['email']
+    session['rating'] = float(row['rating'])
+    session['risk_score'] = int(row.get('risk_score', 65))
+    return redirect(url_for('request_loan_page'))
+
+@app.route('/customer/customer-loans', methods=['GET', 'POST'])
+def customer_loans():
+    if request.method == 'POST':
+        # Validate required form fields
+        if 'amount' not in request.form or 'purpose' not in request.form:
+            flash('Please fill in all required fields.', 'error')
+            return redirect(url_for('customer_loans'))
+        
+        try:
+            CUST_APP_CSV = 'static/data/customer_applications.csv'
+            df = pd.read_csv(CUST_APP_CSV)
+            
+            # Convert and validate amount
+            try:
+                loan_amount = float(request.form['amount'])
+                if loan_amount <= 0:
+                    raise ValueError("Loan amount must be positive")
+            except ValueError as e:
+                flash(f'Invalid loan amount: {str(e)}', 'error')
+                return redirect(url_for('customer_loans'))
+            
+            # Generate realistic random values
+            monthly_income = max(loan_amount + random.randint(700, 3000), 2000)  # Ensure minimum income
+            debt_amount = min(loan_amount + random.randint(0, 1000), monthly_income * 0.8)  # Cap debt at 80% of income
+            
+            # Validate session data
+            if 'customer_id' not in session or 'first_name' not in session or 'last_name' not in session:
+                flash('Please log in to submit a loan application.', 'error')
+                return redirect(url_for('customer_signin'))
+            
+            # Create new application with validated data
+            new_application = {
+                'customer_id': session['customer_id'],
+                'name': f"{session['first_name']} {session['last_name']}",
+                'credit_score': random.randint(600, 850),
+                'monthly_income': monthly_income,
+                'requested_amount': loan_amount,
+                'purpose': request.form['purpose'],
+                'application_date': datetime.datetime.now().strftime('%Y-%m-%d'),
+                'status': 'pending',
+                'risk_score': random.randint(45, 95),
+                'total_debts': debt_amount,
+                'dti_ratio': round(debt_amount / monthly_income * 100, 2),  # Convert to percentage
+                'lti_ratio': round(loan_amount / monthly_income * 100, 2),  # Convert to percentage
+                'payment_history_score': random.randint(45, 95),
+                'credit_history_years': random.randint(0, 30),
+                'recent_credit_inquiries': random.randint(0, 6),
+                'existing_debts': float(debt_amount + random.randint(1500, 6000)),
+                'savings_and_assets': float(monthly_income + random.randint(-1000, 3000)),
+                'employment_stability_years': random.randint(1, 10)
+            }
+            
+            # Safely append new row to DataFrame
+            try:
+                df = pd.concat([df, pd.DataFrame([new_application])], ignore_index=True)
+                df.to_csv(CUST_APP_CSV, index=False)
+                flash('Loan application submitted successfully!', 'success')
+            except Exception as e:
+                flash(f'Error saving application: {str(e)}', 'error')
+                return redirect(url_for('customer_loans'))
+
+        except Exception as e:
+            flash(f'An error occurred: {str(e)}', 'error')
+            return redirect(url_for('customer_loans'))
+
+        return redirect(url_for('customer_loans'))
+
+    # For GET request, show existing loans
+    try:
+        # You might want to load and display existing loans here
+        return render_template('customer-loans.html')
+    except Exception as e:
+        flash(f'Error loading loans: {str(e)}', 'error')
+        return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)

@@ -140,9 +140,35 @@
                 setTimeout(() => {
                     loanButton.style.transform = 'translateY(-2px)';
                 }, 150);
+                
+                const name = loanButton.closest('.merchant-card').querySelector('h3');
+                if (name) {
+                    fetch('/save-merchant-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: name.textContent })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Redirect after session is updated
+                            window.location.href = '/customer/loan-application';
+                        } else {
+                            console.error('Failed to save to session.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    console.error('h3 not found', name);
+                }
+                
+
         
                 // Your loan application logic here
-                alert(`Starting loan application process for ${merchantName}`);
+                // alert(`Starting loan application process for ${merchantName}`);
             };
         
             loanButtonContainer.appendChild(loanButton);
