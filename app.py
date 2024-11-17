@@ -156,6 +156,10 @@ def merchant_signup():
 def merchant_signin():
     return merchant_signin_fn()
 
+@app.route('/customer/request-loan')
+def request_loan_page():
+    return render_template('')
+
 # sarvesh said remove everyting in between this start
 
 

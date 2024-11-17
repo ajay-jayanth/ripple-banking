@@ -56,6 +56,7 @@ def get_merchants():
             'stars': stars,
             'reviews': row.get('reviews', 0),
             'distance': round(distance, 1),
+            'image_path': row['file'],
         }
         merchant_list.append(merchant_info)
     return merchant_list
