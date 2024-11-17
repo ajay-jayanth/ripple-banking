@@ -66,19 +66,35 @@
           </div>
 
           <!-- New Input for Loan Amount -->
-          <div class="form-group">
+          <div class="form-group loan-amount-group">
             <label for="loan-amount">Loan Amount:</label>
-            <input
-              type="number"
-              id="loan-amount"
-              name="amount"
-              placeholder="Enter loan amount"
-              required
-              min="1000"
-            />
+            <div class="loan-amount-container">
+              <span class="currency-symbol">$</span>
+              <input
+                type="text"
+                id="loan-amount"
+                name="amount"
+                placeholder="Enter loan amount"
+                required
+                min="1000"
+                step="100"
+              />
+            </div>
           </div>
 
-          <button type="submit">Submit Application</button>
+          <!-- Submit Button with Conditional Disable -->
+          <button
+            type="submit"
+            {%
+            if
+            has_current_loan
+            %}disabled{%
+            endif
+            %}
+            class="{% if has_current_loan %}disabled{% endif %}"
+          >
+            Submit Application
+          </button>
         </form>
       </div>
     </div>

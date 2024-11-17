@@ -341,3 +341,52 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background: #3db892;
 }
+
+/* Disabled Submit Button */
+button[type="submit"].disabled {
+  background: #d1d1d1;
+  color: #757575;
+  cursor: not-allowed;
+  pointer-events: none; /* Disables clicking */
+}
+
+button[type="submit"].disabled:hover {
+  background: #d1d1d1; /* Prevent hover effect when disabled */
+}
+
+/* Add this to your existing CSS */
+
+/* Container to hold the input and dollar sign together */
+.loan-amount-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #4ecca3; /* Border around the container */
+}
+
+.currency-symbol {
+  color: #4ecca3; /* Green color for the dollar sign */
+  font-size: 1.1rem;
+  margin-right: 8px; /* Space between dollar sign and input */
+}
+
+input#loan-amount {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  flex-grow: 1; /* Makes the input fill the available space */
+  padding: 5px 10px;
+  width: 100%;
+  outline: none;
+}
+
+input#loan-amount::placeholder {
+  color: #b3b3b3; /* Light grey color for the placeholder text */
+}
+
+input#loan-amount:focus {
+  border-color: #3db892; /* Slightly darker green for focus */
+}
