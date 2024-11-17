@@ -88,8 +88,11 @@ async function initMap() {
       map: map,
       icon: {
           url: '/static/images/frog.png',
-          scaledSize: new google.maps.Size(70, 70),
-          anchor: new google.maps.Point(15, 15)
+          scaledSize: new google.maps.Size(43*1.5, 35*1.5),
+          anchor: new google.maps.Point(30, 30)
+      },
+      style: {
+        overflow: 'hidden'
       },
       optimized: false,
       zIndex: 1001

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4ecca3;
+            margin-bottom: 1rem;
+        }
+
+        .merchant-card {
+            background: linear-gradient(to bottom right, rgba(31, 41, 55, 0.95), rgba(17, 24, 39, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s ease-out forwards;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .merchant-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .merchant-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #2a2a40;
+        }
+
+        .merchant-info {
+            flex: 1;
+        }
+
+        .merchant-name {
+            font-size: 1.8rem;
+            color: #4ecca3;
+            margin-bottom: 0.5rem;
+        }
+
+        .merchant-id {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .merchant-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-group {
+            background: rgba(17, 24, 39, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .scores {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-item {
+            text-align: center;
+            flex: 1;
+            background: rgba(17, 24, 39, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .score-label {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-value {
+            font-size: 1.8rem;
+            color: #4ecca3;
+        }
+
+        .loan-section {
+            background: rgba(17, 24, 39, 0.8);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .loan-question {
+            font-size: 1.3rem;
+            color: #4ecca3;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4ecca3;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .button {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button {
+            background: #4ecca3;
+            color: #1a1a2e;
+            border: none;
+        }
+
+        .submit-button:hover {
+            background: #3db892;
+        }
+
+        .back-button {
+            background: transparent;
+            border: 2px solid #4ecca3;
+            color: #4ecca3;
+        }
+
+        .back-button:hover {
+            background: rgba(78, 204, 163, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Apply for Loan</h1>
+        </div>
+
+        <div class="merchant-card">
+            <div class="merchant-header">
+                <img src="/api/placeholder/120/120" alt="Merchant" class="merchant-image">
+                <div class="merchant-info">
+                    <h2 class="merchant-name">Tech Galaxy Store</h2>
+                    <div class="merchant-id">ID: TECH123456</div>
+                </div>
+            </div>
+
+            <div class="merchant-details">
+                <div class="detail-group">
+                    <div class="detail-label">Business Name</div>
+                    <div class="detail-value">Tech Galaxy Enterprises LLC</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">lol@gmail.com</div>
+                </div>
+            </div>
+
+            <div class="scores">
+                <div class="score-item">
+                    <div class="score-label">Rating</div>
+                    <div class="score-value">4.8</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Risk Score</div>
+                    <div class="score-value">85</div>
+                </div>
+            </div>
+
+            <div class="loan-section">
+                <h3 class="loan-question">Apply for loan?</h3>
+                <form>
+                    <div class="form-group">
+                        <label>Loan Amount ($)</label>
+                        <input type="number" placeholder="Enter amount needed" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Purpose of Loan</label>
+                        <textarea placeholder="Describe how you plan to use the loan" rows="3" required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="button back-button">Go Back</button>
+                        <button type="submit" class="button submit-button">Apply Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
