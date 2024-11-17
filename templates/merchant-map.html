@@ -40,9 +40,9 @@
                     <span>{{ merchant.rating }} ({{ merchant.reviews }} reviews)</span>
                 </div>
                 <div class="merchant-details">
-                    <p>{{ merchant.address }}</p>
-                    <p>{{ "%.1f"|format(merchant.distance|default(0)|float) }} miles away</p>
-                    <p>{{ merchant.business_hours|default('Hours not available') }}</p>
+                    {{ merchant.address }}<br>
+                    {{ merchant.distance }} miles away<br>
+                    {{ merchant.business_hours or 'Hours not available' }}
                 </div>
             </div>
             {% endfor %}

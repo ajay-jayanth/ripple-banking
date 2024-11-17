@@ -4,6 +4,23 @@ from typing import Tuple
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 import os
 
+from math import radians, cos, sin, asin, sqrt
+
+def haversine(lat1, lon1, lat2, lon2):
+    """
+    Calculate the distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 3956 # Radius of earth in miles. Use 6371 for kilometers
+    return c * r
 
 API_KEY = 'AIzaSyDzGxjSG77K2SBQi2sWtVRYimFLpHlKYmg'
 gmaps = googlemaps.Client(key=API_KEY)
@@ -27,7 +44,9 @@ def get_merchants():
             continue
         rating = row.get('rating', 5.0)
         stars = '★' * round(rating) + '☆' * (5 - round(rating))
-
+        customer_lat = float(session.get('customer_lat'))
+        customer_long = float(session.get('customer_long'))
+        distance = haversine(customer_lat, customer_long, lat, long)
         merchant_info = {
             'name': f'{row["first_name"]} {row["last_name"]}',
             'address': address,
@@ -36,6 +55,7 @@ def get_merchants():
             'rating': rating,
             'stars': stars,
             'reviews': row.get('reviews', 0),
+            'distance': round(distance, 1),
         }
         merchant_list.append(merchant_info)
     return merchant_list
