@@ -22,12 +22,23 @@
 
     <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
 
+    <script>
+        const customerLat = {{ customer_lat }};
+        const customerLong = {{ customer_long }};
+        const merchantList = {{ merchants|tojson|safe }};
+    </script>
     <div class="main-container">
         <div class="map-container">
             <div class="map-placeholder"></div>
         </div>
 
         <div class="merchants-list">
+            <div class="filters">
+                <button class="filter-btn">Recommended</button>
+                <button class="filter-btn">Closest</button>
+                <button class="filter-btn">Highest Rated</button>
+            </div>
+
             {% for merchant in merchants %}
             <div class="merchant-card" 
                  data-lat="{{ merchant.latitude }}" 
