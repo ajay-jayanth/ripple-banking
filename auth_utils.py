@@ -10,6 +10,8 @@ import string
 
 from maps_utils import address_to_coords
 
+from maps_utils import address_to_coords
+
 
 CSV_PATH = os.path.join(os.getcwd(), 'customers.csv')
 
@@ -25,6 +27,7 @@ def ensure_csv_exists():
                 'customer_id', 'first_name', 'last_name', 'dob', 'ssn',
                 'email', 'phone', 'address', 'city', 'state',
                 'employment_status', 'employer', 'income', 'occupation',
+                'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
                 'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
             ]
             writer.writerow(headers)
@@ -51,6 +54,8 @@ def save_customer(data):
             data.get('accountType', ''),
             data.get('debitCard', ''),
             data.get('password', ''),
+            data.get('customer_lat', 0.0),
+            data.get('customer_long', 0.0),
             data.get('customer_lat', 0.0),
             data.get('customer_long', 0.0),
             datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -130,6 +135,10 @@ def customer_signup_fn():
                 customer_lat, customer_long = address_to_coords(address)
                 session['customer_lat'] = customer_lat
                 session['customer_long'] = customer_long
+                address = f'{session["address"]}, {session["city"]}, {session["state"]}'
+                customer_lat, customer_long = address_to_coords(address)
+                session['customer_lat'] = customer_lat
+                session['customer_long'] = customer_long
                 customer_id = save_customer(session)
                 customer_session({
                     'customer_id': customer_id,
@@ -144,6 +153,7 @@ def customer_signup_fn():
             
         except Exception as e:
             print(f"Error: {str(e)}")
+            flash('An error occurred. Please try again. ' + e, 'error')
             flash('An error occurred. Please try again. ' + e, 'error')
             return render_template('customer-signup.html', step=current_step)
 
