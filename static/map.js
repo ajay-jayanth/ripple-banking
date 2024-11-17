@@ -189,6 +189,20 @@ async function initMap() {
       }, duration / frames);
   }
 
+  const bankLat = parseFloat(27.667370);
+  const bankLong = parseFloat(-97.283710);
+  const bankPos = { lat: bankLat, lng: bankLong }
+  const marker = new google.maps.Marker({
+    position: bankPos,
+    map: map,
+    icon: {
+        url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+        scaledSize: new google.maps.Size(60, 60)
+    },
+    title: 'Wells Fargo',
+    id: 'wells-fargo'
+  });
+
   const merchants = JSON.parse(document.getElementById('merchant-data').textContent);
   const bounds = new google.maps.LatLngBounds();
   bounds.extend({ lat: CUSTOMER_LAT, lng: CUSTOMER_LNG });

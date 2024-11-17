@@ -28,7 +28,7 @@ def ensure_csv_exists():
                 'email', 'phone', 'address', 'city', 'state',
                 'employment_status', 'employer', 'income', 'occupation',
                 'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
-                'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
+                # 'account_type', 'debit_card', 'password', 'customer_lat', 'customer_long', 'created_at'
             ]
             writer.writerow(headers)
 
@@ -56,8 +56,8 @@ def save_customer(data):
             data.get('password', ''),
             data.get('customer_lat', 0.0),
             data.get('customer_long', 0.0),
-            data.get('customer_lat', 0.0),
-            data.get('customer_long', 0.0),
+            # data.get('customer_lat', 0.0),
+            # data.get('customer_long', 0.0),
             datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ]
         writer.writerow(row)

@@ -24,19 +24,35 @@ body {
 }
 
 .logo {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 2rem;
     animation: fadeIn 1s ease-in;
+    align-items: center;
+}
+
+.logo-icon {
+    display: flex;
+    flex-direction: row;
 }
 
 .logo h1 {
+    display: flex;
     font-size: 3.5rem;
     margin-bottom: 0.5rem;
     color: #4ecca3;
+    margin-left: 15px;
 }
 
 .logo p {
     font-size: 1.2rem;
     color: #a8a8a8;
+}
+
+#logo-pic {
+    align-self: center;
+    display: flex;
+    height: 65px;
 }
 
 .options {

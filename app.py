@@ -229,11 +229,13 @@ def customer_loans():
         try:
             CUST_APP_CSV = 'static/data/customer_applications.csv'
             df = pd.read_csv(CUST_APP_CSV)
+
             customers_df = pd.read_csv('customers.csv').set_index('first_name')
             cust_row = customers_df.loc[session['first_name']]
             ph_number = str(cust_row['phone'])
             ph_number = f'({ph_number[:3]}) {ph_number[3:6]}-{ph_number[-4:]}'
             email = cust_row['email']
+
             
             # Convert and validate amount
             try:
@@ -243,7 +245,6 @@ def customer_loans():
             except ValueError as e:
                 flash(f'Invalid loan amount: {str(e)}', 'error')
                 return redirect(url_for('request_loan_page'))
-            
             
             # Generate realistic random values
             monthly_income = max(loan_amount + random.randint(700, 3000), 2000)  # Ensure minimum income
@@ -280,7 +281,6 @@ def customer_loans():
             session['loan_title'] = f'{new_application["purpose"]} Loan'
             session['amount'] = f'{loan_amount:,.2f}'
             session['monthly_payment'] = f'{loan_amount/12:,.2f}'
-
             try:
                 df = pd.concat([df, pd.DataFrame([new_application])], ignore_index=True)
                 df.to_csv(CUST_APP_CSV, index=False)
@@ -290,6 +290,7 @@ def customer_loans():
                 return redirect(url_for('request_loan_page'))
 
         except Exception as e:
+            print(e)
             flash(f'An error occurred: {str(e)}', 'error')
             return redirect(url_for('request_loan_page'))
 
