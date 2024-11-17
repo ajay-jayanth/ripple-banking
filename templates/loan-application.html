@@ -224,48 +224,48 @@
 
         <div class="merchant-card">
             <div class="merchant-header">
-                <img src="/api/placeholder/120/120" alt="Merchant" class="merchant-image">
+                <img src="{{ url_for('static', filename=image_path)}}" alt="Merchant" class="merchant-image">
                 <div class="merchant-info">
-                    <h2 class="merchant-name">Tech Galaxy Store</h2>
-                    <div class="merchant-id">ID: TECH123456</div>
+                    <h2 class="merchant-name">{{ merchant_name }}</h2>
+                    <div class="merchant-id">ID: {{ merchant_id }}</div>
                 </div>
             </div>
 
             <div class="merchant-details">
                 <div class="detail-group">
                     <div class="detail-label">Business Name</div>
-                    <div class="detail-value">Tech Galaxy Enterprises LLC</div>
+                    <div class="detail-value">{{ business_name }}</div>
                 </div>
                 <div class="detail-group">
                     <div class="detail-label">Email</div>
-                    <div class="detail-value">lol@gmail.com</div>
+                    <div class="detail-value">{{ email }}</div>
                 </div>
             </div>
 
             <div class="scores">
                 <div class="score-item">
                     <div class="score-label">Rating</div>
-                    <div class="score-value">4.8</div>
+                    <div class="score-value">{{ rating }}</div>
                 </div>
                 <div class="score-item">
                     <div class="score-label">Risk Score</div>
-                    <div class="score-value">85</div>
+                    <div class="score-value">{{ risk_score }}</div>
                 </div>
             </div>
 
             <div class="loan-section">
                 <h3 class="loan-question">Apply for loan?</h3>
-                <form>
+                <form method="POST" action="{{ url_for('customer_loans') }}">
                     <div class="form-group">
-                        <label>Loan Amount ($)</label>
-                        <input type="number" placeholder="Enter amount needed" required>
+                        <label for="amount">Loan Amount ($)</label>
+                        <input type="number" id="amount" name="amount" required min="1">
                     </div>
                     <div class="form-group">
-                        <label>Purpose of Loan</label>
-                        <textarea placeholder="Describe how you plan to use the loan" rows="3" required></textarea>
+                        <label for="purpose">Purpose of Loan</label>
+                        <input type="text" id="purpose" name="purpose" required>
                     </div>
                     <div class="button-group">
-                        <button type="button" class="button back-button">Go Back</button>
+                        <button type="button" class="button back-button" onclick="window.location.href='/customer/merchant-map';">Go Back</button>
                         <button type="submit" class="button submit-button">Apply Now</button>
                     </div>
                 </form>
@@ -273,8 +273,8 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         lucide.createIcons();
-    </script>
+    </script> -->
 </body>
 </html>

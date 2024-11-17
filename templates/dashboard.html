@@ -8,6 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <div class="sign-out">
+        <button onclick="window.location.href='/'">Sign Out</button>
+    </div>
+    
     <div class="container">
         <div class="logo">
             <h1>Merchant Dashboard</h1>
@@ -16,7 +20,7 @@
         <div class="options">
             <!-- Loan Overview Card -->
             <div class="option-card" onclick="window.location.href='/merchant/loans'" style="width: 600px;">
-                <h2>Loan Overview</h2>
+                <h2>Loans Given Out</h2>
                 <div style="display: flex; justify-content: space-around; margin-bottom: 2rem;">
                     <div>
                         <p style="color: #4ecca3;">Total Lent Out</p>
@@ -36,7 +40,7 @@
 
             <!-- Pending Applications Card -->
             <div class="option-card" style="width: 400px;">
-                <h2>Potential Loan Applicatant</h2>
+                <h2>Loan Applicants</h2>
                 <div style="height: 400px; overflow-y: auto;">
                     {% for application in pending_applications %}
                     <div class="application-item" onclick="window.location.href='/loan/{{ application.customer_id }}'">

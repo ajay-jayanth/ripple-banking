@@ -85,6 +85,14 @@
                 <span class="value" style = "color:#ffffff">{{ customer['name'] }}</span>
             </div>
             <div class="details-item">
+                <span class="label">Phone Number</span>
+                <span class="value" style = "color:#ffffff">{{ customer['phone_number'] }}</span>
+            </div>
+            <div class="details-item">
+                <span class="label">Email</span>
+                <span class="value" style = "color:#ffffff">{{ customer['email'] }}</span>
+            </div>
+            <div class="details-item">
                 <span class="label">Credit Score</span>
                 <span class="value {{ 'green' if customer['credit_score'] >= 750 else 'yellow' if customer['credit_score'] >= 600 else 'red' }}">
                     {{ customer['credit_score'] }}
