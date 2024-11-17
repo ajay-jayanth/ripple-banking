@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Dashboard - Location-Based Banking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Merchant Dashboard</h1>
+            <p>Your Local Banking Hub</p>
+        </div>
+        <div class="options">
+            <!-- Loan Overview Card -->
+            <div class="option-card" onclick="window.location.href='/loans'" style="width: 600px;">
+                <h2>Loan Overview</h2>
+                <div style="display: flex; justify-content: space-around; margin-bottom: 2rem;">
+                    <div>
+                        <p style="color: #4ecca3;">Total Lent Out</p>
+                        <h3 style="color: #ffffff;">${{ "{:,.2f}".format(total_loaned) }}</h3>
+                    </div>
+                    <div>
+                        <p style="color: #4ecca3;">Pending Receivable</p>
+                        <h3 style="color: #ffffff;">${{ "{:,.2f}".format(total_remaining) }}</h3>
+                    </div>
+                    <div>
+                        <p style="color: #4ecca3;">Active Loans</p>
+                        <h3 style="color: #ffffff;">{{ active_loans }}</h3>
+                    </div>
+                </div>
+                <canvas id="loanChart" width="400" height="200"></canvas>
+            </div>
+
+            <!-- Pending Applications Card -->
+            <div class="option-card" style="width: 400px;">
+                <h2>Potential Loan Applicatant</h2>
+                <div style="height: 400px; overflow-y: auto;">
+                    {% for application in pending_applications %}
+                    <div class="application-item" onclick="showCustomerDetails('{{ application.customer_id }}')">
+                        <p class="name">{{ application.name }}</p>
+                        <p>${{ "{:,.0f}".format(application.requested_amount) }} - {{ application.purpose }}</p>
+                        <div class="risk-indicator risk-{{ 'good' if application.risk_score >= 75 else 'moderate' if application.risk_score >= 65 else 'poor' }}">
+                            Risk Score: {{ application.risk_score }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Current Bank Loan Card -->
+            <div class="bank-loan-card">
+                <div class="loan-details-row">
+                    <div class="loan-detail">
+                        <p style="color: #a8a8a8; margin-bottom: 0.5rem;">Bank</p>
+                        <h3 style="color: #4ecca3; font-size: 1.5rem;">{{bank}}</h3>
+                    </div>
+                    <div class="loan-detail">
+                        <p style="color: #a8a8a8; margin-bottom: 0.5rem;">Amount</p>
+                        <h3 style="color: #4ecca3; font-size: 1.5rem;">{{amount}}</h3>
+                    </div>
+                    <!-- <div class="loan-detail">
+                        <p style="color: #a8a8a8; margin-bottom: 0.5rem;">Status</p>
+                        <h3 style="color: #4ecca3; font-size: 1.5rem;">{{status}}</h3>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div id="customerModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                                  background: rgba(26, 26, 46, 0.95); padding: 2rem; border-radius: 15px; z-index: 1000; min-width: 400px;">
+        <h2 style="color: #4ecca3; margin-bottom: 1.5rem;">Customer Details</h2>
+        <div id="customerDetails"></div>
+        <button onclick="closeModal()" style="margin-top: 1rem; background: #4ecca3; border: none; padding: 8px 16px; border-radius: 8px; color: white; cursor: pointer;">Close</button>
+    </div>
+
+    <script>
+        // Initialize loan history chart
+        const ctx = document.getElementById('loanChart').getContext('2d');
+        const loanData = {{ loan_history|tojson }};
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: loanData.map(d => d.start_date),
+                datasets: [{
+                    label: 'Loan Amount',
+                    data: loanData.map(d => d.loan_amount),
+                    borderColor: '#4ecca3',
+                    tension: 0.1
+                }, {
+                    label: 'Remaining Amount',
+                    data: loanData.map(d => d.remaining_amount),
+                    borderColor: '#a8a8a8',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: '#fff'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#fff'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Customer details modal functions
+        async function showCustomerDetails(customerId) {
+            try {
+                const response = await fetch(`/api/customer/${customerId}`);
+                if (!response.ok) {
+                    throw new Error('Customer not found');
+                }
+                const customer = await response.json();
+                
+                const getRiskClass = (status) => {
+                    return `risk-${status}`;
+                };
+                
+                document.getElementById('customerDetails').innerHTML = `
+                    <div style="margin-bottom: 1rem; color: #ffffff">
+                        <p><strong>Name:</strong> ${customer.name}</p>
+                        <p><strong>Monthly Income:</strong> $${customer.monthly_income.toLocaleString()}</p>
+                        <p><strong>Requested Amount:</strong> $${customer.requested_amount.toLocaleString()}</p>
+                        <p><strong>Purpose:</strong> ${customer.purpose}</p>
+                        <p><strong>Application Date:</strong> ${customer.application_date}</p>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                        <h3 style="color: #4ecca3; margin-bottom: 0.5rem;">Risk Assessment</h3>
+                        <p>
+                            <span class="risk-indicator ${getRiskClass(customer.risk_indicators.credit_score.status)}">
+                                Credit Score: ${customer.risk_indicators.credit_score.value}
+                            </span>
+                        </p>
+                        <p>
+                            <span class="risk-indicator ${getRiskClass(customer.risk_indicators.debt_to_income.status)}">
+                                Debt/Income: ${customer.risk_indicators.debt_to_income.value}%
+                            </span>
+                        </p>
+                        <p>
+                            <span class="risk-indicator ${getRiskClass(customer.risk_indicators.risk_score.status)}">
+                                Risk Score: ${customer.risk_indicators.risk_score.value}
+                            </span>
+                        </p>
+                    </div>
+                `;
+                
+                document.getElementById('customerModal').style.display = 'block';
+            } catch (error) {
+                alert('Error loading customer details');
+                console.error(error);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('customerModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('customerModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
