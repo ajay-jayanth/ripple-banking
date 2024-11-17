@@ -322,7 +322,7 @@ def merchant_signin_fn():
             session['merchant_id'] = str(merchant['merchant_id'])
             session['business_name'] = str(merchant['business_name'])
             session['email'] = str(merchant['email'])
-            return redirect(url_for('merchant_dashboard'))
+            return redirect(url_for('dashboard'))
         else:
             print("DEBUG: Login failed - invalid credentials")
             flash('Invalid email or password.', 'error')
@@ -450,4 +450,3 @@ def merchant_signup_fn():
 
     step = int(request.args.get('step', 1))
     return render_template('merchant-signup.html', step=step, form_data=session.get('merchant_data', {}))
-

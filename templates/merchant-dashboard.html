@@ -1,103 +1,99 @@
 <!-- templates/merchant-dashboard.html -->
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/overall.css') }}"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/overall.css') }}"
     />
     <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/dashboard.css') }}"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
     />
     <title>Merchant Dashboard - Ripple Banking</title>
-    <button class="back-button" onclick="window.location.href='/'">← Back to Dashboard</button>
-  </head>
-  <body>
+    {% if has_current_loan %}
+    <button
+        class="back-button"
+        onclick="window.location.href='/merchant/dashboard'"
+    >
+        ← Back to Dashboard
+    </button>
+    {% endif %}
+</head>
+<body>
     <div class="dashboard-container">
-      <!-- Left Side - Loan History -->
-      <div class="loan-history">
-        <h2>Loan History</h2>
-        <div class="loans-list">
-          {% for loan in loans %}
-          <div class="loan-card">
-            <div class="loan-header">
-              <h3>{{ loan.bank }}</h3>
-              <span class="status-badge {{ loan.status }}">
-                {% if loan.status == 'rejected' %}
-                <span class="icon">✕</span>
-                {% elif loan.status == 'current' %}
-                <span class="icon">⚠</span>
-                {% elif loan.status == 'paid' %}
-                <span class="icon">✓</span>
-                <!-- Updated icon for 'paid' status -->
-                {% endif %} {{ loan.status | title }}
-              </span>
+        <!-- Left Side - Loan History -->
+        <div class="loan-history">
+            <h2>Loan History</h2>
+            <div class="loans-list">
+                {% for loan in loans %}
+                <div class="loan-card">
+                    <div class="loan-header">
+                        <h3>{{ loan.bank }}</h3>
+                        <span class="status-badge {{ loan.status }}">
+                            {% if loan.status == 'rejected' %}
+                            <span class="icon">✕</span>
+                            {% elif loan.status == 'current' %}
+                            <span class="icon">⚠</span>
+                            {% elif loan.status == 'paid' %}
+                            <span class="icon">✓</span>
+                            {% endif %} {{ loan.status | title }}
+                        </span>
+                    </div>
+                    <div class="loan-details">
+                        <p>Amount: {{ loan.amount }}</p>
+                        <p>Date: {{ loan.date }}</p>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            <div class="loan-details">
-              <p>Amount: {{ loan.amount }}</p>
-              <p>Date: {{ loan.date }}</p>
-            </div>
-          </div>
-          {% endfor %}
         </div>
-      </div>
-
-      <!-- Right Side - New Loan Application -->
-      <div class="new-loan">
-        <h2>New Loan Application</h2>
-        <form
-          action="{{ url_for('merchant.submit_loan') }}"
-          method="post"
-          class="loan-form"
-        >
-          <div class="form-group">
-            <label class="radio-group-label">Select Bank:</label>
-            <div class="radio-group">
-              {% for bank in banks %}
-              <label class="radio-option">
-                <input type="radio" name="bank" value="{{ bank }}" required />
-                <span class="radio-custom"></span>
-                <span class="radio-label">{{ bank }}</span>
-              </label>
-              {% endfor %}
-            </div>
-          </div>
-
-          <!-- New Input for Loan Amount -->
-          <div class="form-group loan-amount-group">
-            <label for="loan-amount">Loan Amount:</label>
-            <div class="loan-amount-container">
-              <span class="currency-symbol">$</span>
-              <input
-                type="text"
-                id="loan-amount"
-                name="amount"
-                placeholder="Enter loan amount"
-                required
-                min="1000"
-                step="100"
-              />
-            </div>
-          </div>
-
-          <!-- Submit Button with Conditional Disable -->
-          <button
-            type="submit"
-            {%
-            if
-            has_current_loan
-            %}disabled{%
-            endif
-            %}
-            class="{% if has_current_loan %}disabled{% endif %}"
-          >
-            Submit Application
-          </button>
-        </form>
-      </div>
+        <!-- Right Side - New Loan Application -->
+        <div class="new-loan">
+            <h2>New Loan Application</h2>
+            <form
+                action="{{ url_for('merchant.submit_loan') }}"
+                method="post"
+                class="loan-form"
+            >
+                <div class="form-group">
+                    <label class="radio-group-label">Select Bank:</label>
+                    <div class="radio-group">
+                        {% for bank in banks %}
+                        <label class="radio-option">
+                            <input type="radio" name="bank" value="{{ bank }}" required />
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">{{ bank }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group loan-amount-group">
+                    <label for="loan-amount">Loan Amount:</label>
+                    <div class="loan-amount-container">
+                        <span class="currency-symbol">$</span>
+                        <input
+                            type="text"
+                            id="loan-amount"
+                            name="amount"
+                            placeholder="Enter loan amount"
+                            required
+                            min="1000"
+                            step="100"
+                        />
+                    </div>
+                </div>
+                <button
+                    type="submit"
+                    {% if has_current_loan %}disabled{% endif %}
+                    class="{% if has_current_loan %}disabled{% endif %}"
+                >
+                    Submit Application
+                </button>
+            </form>
+        </div>
     </div>
-  </body>
+</body>
 </html>
