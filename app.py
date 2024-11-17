@@ -218,7 +218,7 @@ def customer_loans():
             
             # Create new application with validated data
             new_application = {
-                'customer_id': session['customer_id'],
+                'customer_id': int(random.randint(15, 10000)),
                 'name': f"{session['first_name']} {session['last_name']}",
                 'credit_score': random.randint(600, 850),
                 'monthly_income': monthly_income,
@@ -260,6 +260,8 @@ def customer_loans():
     except Exception as e:
         flash(f'Error loading loans: {str(e)}', 'error')
         return redirect(url_for('index'))
+
+# TODO: Sign out from my loans, and populate it
 
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)
