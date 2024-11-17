@@ -19,9 +19,7 @@
         <div class="logo">Ripple Banking</div>
         <input type="text" class="search-bar" placeholder="Search merchants...">
     </nav>
-
     <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
-
     <script>
         const customerLat = {{ customer_lat }};
         const customerLong = {{ customer_long }};
@@ -31,35 +29,33 @@
         <div class="map-container">
             <div class="map-placeholder"></div>
         </div>
-
         <div class="merchants-list">
-            <div class="filters">
-                <button class="filter-btn">Recommended</button>
-                <button class="filter-btn">Closest</button>
-                <button class="filter-btn">Highest Rated</button>
+            <div class="sort-buttons">
+                <button id="sort-distance-button">Sort by Distance</button>
+                <button id="sort-rating-button">Sort by Rating</button>
             </div>
-
             {% for merchant in merchants %}
-            <div class="merchant-card" 
-                 data-lat="{{ merchant.latitude }}" 
+            <div class="merchant-card"
+                 data-lat="{{ merchant.latitude }}"
                  data-lng="{{ merchant.longitude }}"
                  data-name="{{ merchant.name }}">
-                <div class="merchant-image">[Merchant Image]</div>
+                <div class="merchant-image">
+                    <img src="{{ url_for('static', filename=merchant['image_path']) }}">
+                </div>
                 <h3 class="merchant-name">{{ merchant.name }}</h3>
                 <div class="merchant-rating">
-                    {{ merchant.stars }} 
-                    <span>{{ merchant.rating }} ({{ merchant.reviews }} reviews)</span>
+                    {{ merchant.stars }}
+                    <span>{{ merchant.rating }}</span>
                 </div>
                 <div class="merchant-details">
                     {{ merchant.address }}<br>
-                    {{ merchant.distance }} miles away<br>
+                    {{ "%.1f"|format(merchant.distance|default(0)|float) }} miles away<br>
                     {{ merchant.business_hours or 'Hours not available' }}
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-
     <script>
         document.querySelector('.search-bar').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
@@ -69,17 +65,88 @@
             });
         });
 
+        // Add click listener to merchant cards in the list
         document.querySelectorAll('.merchant-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const lat = parseFloat(this.getAttribute('data-lat'));
-                const lng = parseFloat(this.getAttribute('data-lng'));
-                
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    const position = { lat, lng };
-                    map.setCenter(position);
-                    map.setZoom(16);
+            const merchantName = card.getAttribute('data-name');
+            const detailsSection = card.querySelector('.merchant-details');
+            
+            // Create loan button container for better spacing
+            const loanButtonContainer = document.createElement('div');
+            loanButtonContainer.className = 'loan-button-container';
+            loanButtonContainer.style.cssText = `
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(78, 204, 163, 0.2);
+            `;
+        
+            // Create and style the loan button
+            const loanButton = document.createElement('button');
+            loanButton.className = 'merchant-loan-button';
+            loanButton.innerHTML = `
+                <span class="button-content">
+                    Apply for Loan
+                </span>
+            `;
+            
+            // Add the custom styles for the button
+            const buttonStyles = `
+                .merchant-loan-button {
+                    width: 100%;
+                    background: rgba(78, 204, 163, 0.1);
+                    border: 1px solid rgba(78, 204, 163, 0.3);
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    color: #4ecca3;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    backdrop-filter: blur(5px);
                 }
-            });
+        
+                .merchant-loan-button:hover {
+                    background: rgba(78, 204, 163, 0.2);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(78, 204, 163, 0.2);
+                }
+        
+                .merchant-loan-button:active {
+                    transform: translateY(0px);
+                }
+        
+                .button-content {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+            `;
+        
+            // Add the styles to the document
+            if (!document.querySelector('#merchant-loan-button-styles')) {
+                const styleSheet = document.createElement('style');
+                styleSheet.id = 'merchant-loan-button-styles';
+                styleSheet.textContent = buttonStyles;
+                document.head.appendChild(styleSheet);
+            }
+        
+            loanButton.onclick = (e) => {
+                e.stopPropagation(); // Prevent card click event
+                
+                // Add click effect
+                loanButton.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    loanButton.style.transform = 'translateY(-2px)';
+                }, 150);
+        
+                // Your loan application logic here
+                alert(`Starting loan application process for ${merchantName}`);
+            };
+        
+            loanButtonContainer.appendChild(loanButton);
+            detailsSection.appendChild(loanButtonContainer);
         });
     </script>
 </body>

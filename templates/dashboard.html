@@ -39,7 +39,7 @@
                 <h2>Potential Loan Applicatant</h2>
                 <div style="height: 400px; overflow-y: auto;">
                     {% for application in pending_applications %}
-                    <div class="application-item" onclick="showCustomerDetails('{{ application.customer_id }}')">
+                    <div class="application-item" onclick="window.location.href='/loan/{{ application.customer_id }}'">
                         <p class="name">{{ application.name }}</p>
                         <p>${{ "{:,.0f}".format(application.requested_amount) }} - {{ application.purpose }}</p>
                         <div class="risk-indicator risk-{{ 'good' if application.risk_score >= 75 else 'moderate' if application.risk_score >= 65 else 'poor' }}">

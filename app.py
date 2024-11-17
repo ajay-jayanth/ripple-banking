@@ -93,6 +93,19 @@ def dashboard():
                          banks=available_banks,
                          has_current_loan=has_current_loan)
 
+@app.route('/loan/<customer_id>')
+def loan_details(customer_id):
+    # Load customer data from CSV
+    import pandas as pd
+    df = pd.read_csv('static/data/customer_applications.csv')
+    customer = df[df['customer_id'] == int(customer_id)].to_dict(orient='records')
+    
+    if not customer:
+        return "Customer not found", 404
+
+    customer = customer[0]  # Get the first (and only) record as a dict
+    return render_template('loan_details.html', customer=customer)
+
 @app.route('/api/customer/<customer_id>')
 def get_customer_details(customer_id):
     _, applications_df = load_data()
@@ -143,32 +156,9 @@ def merchant_signup():
 def merchant_signin():
     return merchant_signin_fn()
 
-# sarvesh said remove everyting in between this start
+@app.route('/customer/loan-application')
+def request_loan_page():
+    return render_template('loan-application.html')
 
-
-# @app.route('/merchant/dashboard')
-# def merchant_dashboard():
-#     # Check if merchant is logged in
-#     if 'merchant_id' not in session:
-#         flash('Please login first.', 'error')
-#         return redirect(url_for('merchant_signin'))
-
-#     # Get merchant data from session
-#     merchant_data = {
-#         'merchant_id': session.get('merchant_id'),
-#         'business_name': session.get('business_name'),
-#         'email': session.get('email')
-#     }
-
-#     return render_template('dashboard.html', merchant=merchant_data)
-
-
-@app.route('/customer/customer-loans')
-def customer_loans():
-    return render_template(
-        'customer-loans.html'
-    )
-
-# sarvesh said remove everyting in between this end
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)
