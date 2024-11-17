@@ -160,26 +160,5 @@ def merchant_signin():
 def request_loan_page():
     return render_template('loan-application.html')
 
-# sarvesh said remove everyting in between this start
-
-
-# @app.route('/merchant/dashboard')
-# def merchant_dashboard():
-#     # Check if merchant is logged in
-#     if 'merchant_id' not in session:
-#         flash('Please login first.', 'error')
-#         return redirect(url_for('merchant_signin'))
-
-#     # Get merchant data from session
-#     merchant_data = {
-#         'merchant_id': session.get('merchant_id'),
-#         'business_name': session.get('business_name'),
-#         'email': session.get('email')
-#     }
-
-#     return render_template('dashboard.html', merchant=merchant_data)
-
-
-# sarvesh said remove everyting in between this end
 if __name__ == '__main__':
     app.run(debug=True, host='localhost', port=3000)
