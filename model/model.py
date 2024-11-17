@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset, DataLoader
+import numpy as np
 
 class LoanDataset(Dataset):
-    """Custom Dataset for loan prediction data"""
     def __init__(self, features, targets):
         self.features = torch.FloatTensor(features)
         self.targets = torch.FloatTensor(targets)
@@ -20,7 +19,6 @@ class LoanDataset(Dataset):
         return self.features[idx], self.targets[idx]
 
 class LoanPredictionModel(nn.Module):
-    """Neural Network for loan prediction"""
     def __init__(self, input_dim):
         super(LoanPredictionModel, self).__init__()
         self.layer1 = nn.Linear(input_dim, 64)
@@ -41,36 +39,33 @@ class LoanPredictionModel(nn.Module):
         x = self.dropout(x)
         x = self.relu(self.batch_norm3(self.layer3(x)))
         x = self.dropout(x)
-        x = torch.sigmoid(self.layer4(x))
+        x = self.layer4(x)  
         return x
 
 def prepare_data(data, batch_size=32):
-    """Prepare data for training"""
-    # Separate features and target
-    X = data[['loan_percent_income', 'loan_amount', 'person_income', 'person_emp_length']].values
+    data = data.dropna()
+    
+    data['loan_status'] = data['loan_status'].apply(lambda x: 1 if x == 'Approved' else 0)
+    
+    X = data[['loan_percent_income', 'loan_amnt', 'person_income', 'person_emp_length']].values
     y = data['loan_status'].values.reshape(-1, 1)
     
-    # Split the data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    # Scale the features
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    # Create datasets
     train_dataset = LoanDataset(X_train_scaled, y_train)
     test_dataset = LoanDataset(X_test_scaled, y_test)
     
-    # Create data loaders
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     
     return train_loader, test_loader, scaler
 
 def train_model(model, train_loader, num_epochs=100, learning_rate=0.001):
-    """Train the neural network"""
-    criterion = nn.BCELoss()
+    criterion = nn.BCEWithLogitsLoss()  # Using BCEWithLogitsLoss
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -82,11 +77,13 @@ def train_model(model, train_loader, num_epochs=100, learning_rate=0.001):
         for features, targets in train_loader:
             features, targets = features.to(device), targets.to(device)
             
-            # Forward pass
             outputs = model(features)
             loss = criterion(outputs, targets)
             
-            # Backward pass and optimization
+            if torch.isnan(loss).any():
+                print(f"NaN loss detected at epoch {epoch+1}")
+                return
+            
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -110,7 +107,7 @@ def evaluate_model(model, test_loader):
         for features, targets in test_loader:
             features, targets = features.to(device), targets.to(device)
             outputs = model(features)
-            predicted = (outputs >= 0.5).float()
+            predicted = (torch.sigmoid(outputs) >= 0.5).float()  # Apply sigmoid here
             
             total += targets.size(0)
             correct += (predicted == targets).sum().item()
@@ -124,42 +121,29 @@ def evaluate_model(model, test_loader):
     return predictions, actual
 
 def predict_new_applications(model, scaler, new_data):
-    """Make predictions on new applications"""
     model.eval()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    # Scale the new data
     scaled_data = scaler.transform(new_data)
     
-    # Convert to tensor
     features = torch.FloatTensor(scaled_data).to(device)
     
-    # Make predictions
     with torch.no_grad():
         outputs = model(features)
-        predictions = (outputs >= 0.5).float()
+        predictions = (torch.sigmoid(outputs) >= 0.5).float()  # Apply sigmoid here
     
     return predictions.cpu().numpy()
 
-# Example usage
 if __name__ == "__main__":
-    # Create sample data
-    np.random.seed(42)
-    n_samples = 1000
+    example_data = pd.read_csv("/Users/neilagrawal/HackUTD 2024/ripple-banking/model/credit_risk_dataset.csv")
     
-    example_data = pd.read_csv("credit_risk_dataset.csv")
-    
-    # Prepare data
     train_loader, test_loader, scaler = prepare_data(example_data)
     
-    # Initialize and train model
     model = LoanPredictionModel(input_dim=4)
     train_model(model, train_loader)
     
-    # Evaluate model
     predictions, actual = evaluate_model(model, test_loader)
     
-    # Example of making new predictions
     new_applications = np.array([
         [0.3, 250000, 80000, 5],
         [0.2, 180000, 65000, 3]
