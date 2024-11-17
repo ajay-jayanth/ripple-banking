@@ -19,18 +19,30 @@
 
     <div id="merchant-data" style="display:none;">{{ merchants|tojson|safe }}</div>
 
+    <script>
+        const customerLat = {{ customer_lat }};
+        const customerLong = {{ customer_long }};
+        const merchantList = {{ merchants|tojson|safe }};
+    </script>
     <div class="main-container">
         <div class="map-container">
             <div class="map-placeholder">
-                <gmp-map center="{{ customer_lat }}, {{ customer_long }}" zoom="14" map-id="DEMO_MAP_ID">
+                <!-- <gmp-map center="{{ customer_lat }}, {{ customer_long }}" zoom="14" map-id="DEMO_MAP_ID" id="map">
+                    <gmp-advanced-marker position="{{ customer_lat }}, {{ customer_long }}" title="{{ first_name }}" gmp-clickable id="self-maker"></gmp-advanced-marker>
                     {% for merchant in merchants %}
                     <gmp-advanced-marker position="{{ merchant['latitude'] }}, {{ merchant['longitude'] }}" title="{{ merchant['name'] }}" gmp-clickable></gmp-advanced-marker>
                     {% endfor %}
-                </gmp-map>
+                </gmp-map> -->
             </div>
         </div>
 
         <div class="merchants-list">
+            <div class="filters">
+                <button class="filter-btn">Recommended</button>
+                <button class="filter-btn">Closest</button>
+                <button class="filter-btn">Highest Rated</button>
+            </div>
+
             {% for merchant in merchants %}
             <div class="merchant-card">
                 <div class="merchant-image">[Merchant Image]</div>
