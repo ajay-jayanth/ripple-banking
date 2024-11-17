@@ -13,7 +13,11 @@
       href="{{ url_for('static', filename='css/dashboard.css') }}"
     />
     <title>Merchant Dashboard - Ripple Banking</title>
-    <button class="back-button" onclick="window.location.href='/'">← Back to Dashboard</button>
+      {% if has_current_loan %}
+        <button class="back-button" onclick="window.location.href='/merchant/dashboard'">
+          ← Back to Dashboard
+        </button>
+      {% endif %}
   </head>
   <body>
     <div class="dashboard-container">
@@ -86,12 +90,7 @@
           <!-- Submit Button with Conditional Disable -->
           <button
             type="submit"
-            {%
-            if
-            has_current_loan
-            %}disabled{%
-            endif
-            %}
+            {% if has_current_loan %}disabled{%endif%}
             class="{% if has_current_loan %}disabled{% endif %}"
           >
             Submit Application

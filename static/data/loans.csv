@@ -1,5 +1,6 @@
-bank,status,date,amount
-Goldman Sachs,current,2024-03-15,30000
-Bank of America,rejected,2024-02-01,75000
-Chase,paid,2024-03-20,10000
-Citi,paid,2023-12-31,25000
+merchant_id,bank,status,date,amount
+MC26294240,Goldman Sachs,current,2024-03-15,30000
+MC26294240,Bank of America,rejected,2024-02-01,75000
+MC49992095,Chase,paid,2024-03-20,10000
+MC49992095,Citi,paid,2023-12-31,25000
+MC49992095,Goldman Sachs,current,2024-11-17,25000

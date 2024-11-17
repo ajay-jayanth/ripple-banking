@@ -262,41 +262,84 @@ def check_email_exists(email):
     return False
 
 
+# def verify_merchant(email, password):
+#     """Verify merchant credentials using pandas"""
+#     if not os.path.exists(MERCHANT_CSV_PATH):
+#         print(f"DEBUG: CSV file not found at {MERCHANT_CSV_PATH}")
+#         return None
+    
+#     try:
+#         df = pd.read_csv(MERCHANT_CSV_PATH)
+#         print(f"DEBUG: Found {len(df)} merchants in CSV")
+        
+#         # Replace NaN values with empty strings
+#         df = df.fillna('')
+        
+#         # Clean the data before comparison
+#         df['email'] = df['email'].astype(str).str.strip()
+#         df['password'] = df['password'].astype(str).str.strip()
+#         email = str(email).strip()
+#         password = str(password).strip()
+        
+#         # Debug prints
+#         print(f"DEBUG: Looking for email: {email}")
+#         email_matches = df[df['email'] == email]
+#         if not email_matches.empty:
+#             print(f"DEBUG: Found email match. Stored password: '{email_matches.iloc[0]['password']}'")
+#             print(f"DEBUG: Provided password: '{password}'")
+        
+#         merchant = df[(df['email'] == email) & (df['password'] == password)]
+#         print(f"DEBUG: Full credentials match: {len(merchant)}")
+        
+#         if not merchant.empty:
+#             # Convert numpy/pandas types to Python native types
+#             return {
+#                 'merchant_id': str(merchant.iloc[0]['merchant_id']),
+#                 'business_name': str(merchant.iloc[0]['business_name']),
+#                 'email': str(merchant.iloc[0]['email'])
+#             }
+#     except Exception as e:
+#         print(f"DEBUG: Error verifying merchant: {str(e)}")
+#     return None
+
+# In auth_utils.py
+
 def verify_merchant(email, password):
-    """Verify merchant credentials using pandas"""
+    """Verify merchant credentials and check for current loans"""
     if not os.path.exists(MERCHANT_CSV_PATH):
         print(f"DEBUG: CSV file not found at {MERCHANT_CSV_PATH}")
         return None
     
     try:
-        df = pd.read_csv(MERCHANT_CSV_PATH)
-        print(f"DEBUG: Found {len(df)} merchants in CSV")
+        merchant_df = pd.read_csv(MERCHANT_CSV_PATH)
+        loans_df = pd.read_csv('static/data/loans.csv')
         
         # Replace NaN values with empty strings
-        df = df.fillna('')
+        merchant_df = merchant_df.fillna('')
         
         # Clean the data before comparison
-        df['email'] = df['email'].astype(str).str.strip()
-        df['password'] = df['password'].astype(str).str.strip()
+        merchant_df['email'] = merchant_df['email'].astype(str).str.strip()
+        merchant_df['password'] = merchant_df['password'].astype(str).str.strip()
         email = str(email).strip()
         password = str(password).strip()
         
-        # Debug prints
-        print(f"DEBUG: Looking for email: {email}")
-        email_matches = df[df['email'] == email]
-        if not email_matches.empty:
-            print(f"DEBUG: Found email match. Stored password: '{email_matches.iloc[0]['password']}'")
-            print(f"DEBUG: Provided password: '{password}'")
-        
-        merchant = df[(df['email'] == email) & (df['password'] == password)]
-        print(f"DEBUG: Full credentials match: {len(merchant)}")
+        merchant = merchant_df[(merchant_df['email'] == email) & (merchant_df['password'] == password)]
         
         if not merchant.empty:
-            # Convert numpy/pandas types to Python native types
+            merchant_id = str(merchant.iloc[0]['merchant_id'])
+            
+            # Check if merchant has any current loans
+            has_current_loan = any(
+                (loans_df['merchant_id'] == merchant_id) &
+                (loans_df['status'] == 'current')
+            )
+            print(has_current_loan)
+            
             return {
-                'merchant_id': str(merchant.iloc[0]['merchant_id']),
+                'merchant_id': merchant_id,
                 'business_name': str(merchant.iloc[0]['business_name']),
-                'email': str(merchant.iloc[0]['email'])
+                'email': str(merchant.iloc[0]['email']),
+                'has_current_loan': has_current_loan
             }
     except Exception as e:
         print(f"DEBUG: Error verifying merchant: {str(e)}")
@@ -318,11 +361,16 @@ def merchant_signin_fn():
         
         if merchant:
             print("DEBUG: Login successful, setting session")
-            # Ensure all values are JSON serializable
+            # Set session data
             session['merchant_id'] = str(merchant['merchant_id'])
             session['business_name'] = str(merchant['business_name'])
             session['email'] = str(merchant['email'])
-            return redirect(url_for('merchant_dashboard'))
+            
+            # Redirect based on loan status
+            if merchant['has_current_loan']:
+                return redirect(url_for('dashboard'))
+            else:
+                return redirect(url_for('merchant.merchant_dashboard'))
         else:
             print("DEBUG: Login failed - invalid credentials")
             flash('Invalid email or password.', 'error')
